@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Attendance List for Today</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(-45deg, #00e8be, #000000, #000000, #00e8be);
+      background-size: 400% 400%;
+      animation: backgroundShift 15s ease infinite;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 50px auto;
+      background: rgba(0,0,0,0.15);
+      padding: 40px 32px;
+      border-radius: 18px;
+      box-shadow: 0 0 25px #18bc9c, 0 0 50px #18bc9c80;
+      animation: fadeIn 1s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+      text-align: center;
+      color: #e0f7f1;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #18bc9c;
+      font-size: 2rem;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background-color: #18bc9c;
+      border-radius: 2px;
+    }
+
+    .attendance-list {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .attendance-section {
+      flex: 1;
+      min-width: 300px;
+      animation: fadeIn 1s ease-in;
+      background: rgba(0,0,0,0.10);
+      border-radius: 12px;
+      padding: 20px 18px 28px 18px;
+      box-shadow: 0 2px 10px rgba(24,188,156,0.10);
+    }
+
+    .attendance-section h3 {
+      text-align: center;
+      color: #18bc9c;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px #18bc9c;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: 1px solid #18bc9c;
+      margin-bottom: 15px;
+      font-size: 15px;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      box-shadow: inset 0 0 5px rgba(24,188,156,0.5);
+    }
+
+    .search-input::placeholder {
+      color: #b2dfdb;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    li {
+      padding: 10px 15px;
+      border-bottom: 1px solid #18bc9c33;
+      font-weight: 500;
+      transition: background 0.3s;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    li:hover {
+      background-color: rgba(24,188,156,0.10);
+    }
+
+    .present { color: #27ae60; }
+    .absent { color: #e74c3c; }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      background: linear-gradient(90deg, #18bc9c, #00e8be);
+      color: #fff;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 10px #18bc9c80;
+      animation: glow 2s infinite alternate;
+      transition: background 0.3s, transform 0.2s;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: linear-gradient(90deg, #00e8be, #18bc9c);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      animation: dangerGlow 2s infinite alternate;
+      box-shadow: 0 0 10px #e74c3c80;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #18bc9c80; }
+      to { box-shadow: 0 0 20px #18bc9c; }
+    }
+
+    @keyframes dangerGlow {
+      from { box-shadow: 0 0 10px #e74c3c80; }
+      to { box-shadow: 0 0 20px #e74c3c; }
+    }
+
+    .footer-btn {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: rgba(24, 188, 156, 0.7);
+      border-radius: 50%;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Glowing Particles -->
+  <script>
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+      particle.style.opacity = Math.random();
+      document.body.appendChild(particle);
+    }
+  </script>
+
+  <div class="container">
+    <h2><i class="fas fa-calendar-times"></i> Attendance List for Today</h2>
+    <div class="attendance-list">
+
+      <!-- Present Section -->
+      <div class="attendance-section">
+        <h3><i class="fas fa-user-check"></i> Present Employees</h3>
+        <input type="text" id="presentSearch" onkeyup="searchList('presentSearch', 'presentList')" placeholder="Search present..." class="search-input">
+        <ul id="presentList">
+          {% for present in presents %}
+            <li class="present"><i class="fas fa-user"></i> {{ present.employee.name }} ({{ present.employee.id }})</li>
+          {% empty %}
+            <li>No present employees today.</li>
+          {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'clear_attendance' %}">
+          {% csrf_token %}
+          <input type="hidden" name="status" value="Present">
+          <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Presents</button>
+        </form>
+      </div>
+
+      <!-- Absent Section -->
+      <div class="attendance-section">
+        <h3><i class="fas fa-user-times"></i> Absent Employees</h3>
+        <input type="text" id="absentSearch" onkeyup="searchList('absentSearch', 'absentList')" placeholder="Search absent..." class="search-input">
+        <ul id="absentList">
+          {% for absent in absents %}
+            <li class="absent"><i class="fas fa-user"></i> {{ absent.employee.name }} ({{ absent.employee.id }})</li>
+          {% empty %}
+            <li>No absentees today.</li>
+          {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'clear_attendance' %}">
+          {% csrf_token %}
+          <input type="hidden" name="status" value="Absent">
+          <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Clear Absents</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-btn">
+      <a href="{% url 'attendance' %}" class="btn"><i class="fas fa-arrow-left"></i> Back to Attendance</a>
+      <a href="{% url 'home' %}" class="btn"><i class="fas fa-home"></i> Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    function searchList(inputId, listId) {
+      const input = document.getElementById(inputId).value.toLowerCase();
+      const list = document.getElementById(listId);
+      const items = list.getElementsByTagName("li");
+
+      for (let i = 0; i < items.length; i++) {
+        const text = items[i].textContent || items[i].innerText;
+        if (text.toLowerCase().includes(input)) {
+          items[i].style.display = "";
+        } else {
+          items[i].style.display = "none";
+        }
+      }
+    }
+  </script>
+
+  <script src="https://kit.fontawesome.com/4e9c8e6f5b.js" crossorigin="anonymous"></script>
+</body>
+</html>

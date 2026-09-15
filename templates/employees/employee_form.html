@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Employee</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #00e8be, #000000, #000000, #00e8be);
+            background-size: 400% 400%;
+            animation: backgroundShift 15s ease infinite;
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+        }
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            padding-top: 40px;
+        }
+        .card-glow {
+            position: relative;
+            z-index: 1;
+            background: rgba(0,0,0,0.15);
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 100, 255, 0.08), 0 2px 10px rgba(0, 100, 255, 0.08);
+            padding: 40px 32px 32px 32px;
+            margin: 60px auto 0 auto;
+            max-width: 480px;
+            animation: fadeIn 1s ease-in-out;
+            color: white;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: #e0f7f1;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .btn-primary, .btn-secondary, .btn-home {
+            padding: 10px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 0 6px;
+            display: inline-block;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #18bc9c, #00e8be);
+            border: none;
+            color: white;
+            box-shadow: 0 2px 8px rgba(24, 188, 156, 0.3);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #00e8be, #18bc9c);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(24, 188, 156, 0.4);
+        }
+        .btn-secondary {
+            background: #222;
+            color: #18bc9c;
+            border: 1px solid #18bc9c;
+        }
+        .btn-secondary:hover {
+            background: #18bc9c;
+            color: #fff;
+        }
+        .btn-home {
+            background: linear-gradient(90deg, #18bc9c, #00e8be);
+            color: #fff;
+            border: none;
+            margin-top: 18px;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(24, 188, 156, 0.3);
+        }
+        .btn-home:hover {
+            background: linear-gradient(90deg, #00e8be, #18bc9c);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(24, 188, 156, 0.4);
+        }
+        .form-label {
+            font-weight: 600;
+            color: #e0f7f1;
+        }
+        .form-control {
+            background-color: rgba(255,255,255,0.08);
+            color: #fff;
+            border: 1px solid #18bc9c;
+        }
+        .form-control:focus {
+            border-color: #00e8be;
+            box-shadow: 0 0 0 0.2rem rgba(0,232,190,.15);
+            background-color: rgba(0,232,190,0.08);
+            color: #fff;
+        }
+        .text-danger {
+            color: #ff4d4d !important;
+        }
+        .footer-btns {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 30px;
+        }
+        .particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: rgba(24, 188, 156, 0.7);
+            border-radius: 50%;
+            animation: floatUp 6s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Glowing Particles -->
+    <script>
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+            particle.style.opacity = Math.random();
+            document.body.appendChild(particle);
+        }
+    </script>
+    <div class="container">
+        <div class="card-glow">
+            <h1><i class="fas fa-user-plus"></i> Add Employee</h1>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="footer-btns">
+                    <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-user-plus"></i> Save</button>
+                    <a href="{% url 'employee_list' %}" class="btn btn-secondary mt-2"><i class="fas fa-users"></i> Back to Employee List</a>
+                    <a href="{% url 'home' %}" class="btn btn-home mt-2"><i class="fas fa-home"></i> Back to Home</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/4e9c8e6f5b.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ employee.name }} - Details</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(-45deg, #00e8be, #000000, #000000, #00e8be);
+      background-size: 400% 400%;
+      animation: backgroundShift 15s ease infinite;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      z-index: 1;
+      position: relative;
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      box-shadow: 0 0 25px #18bc9c, 0 0 50px #18bc9c80;
+      color: #fff;
+      padding: 40px 32px;
+      max-width: 500px;
+      width: 100%;
+      animation: fadeInUp 1s ease forwards;
+      backdrop-filter: blur(6px);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    h2 {
+      color: #e0f7f1;
+      text-align: center;
+      margin-bottom: 18px;
+      text-shadow: 0 0 10px #18bc9c;
+      font-size: 2rem;
+    }
+    h4 {
+      color: #18bc9c;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 8px #18bc9c;
+    }
+    .info-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px 0;
+      font-size: 1.1rem;
+    }
+    .info-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .info-list i {
+      color: #18bc9c;
+      min-width: 22px;
+      text-align: center;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(24,188,156,0.1);
+      color: #fff;
+    }
+    .table th, .table td {
+      padding: 12px 10px;
+      text-align: left;
+    }
+    .table th {
+      background: #18bc9c;
+      color: #fff;
+      font-weight: bold;
+      border-bottom: 2px solid #00e8be;
+    }
+    .table tr:nth-child(even) {
+      background: rgba(24,188,156,0.08);
+    }
+    .table tr:hover {
+      background: rgba(24,188,156,0.18);
+    }
+    .btn-back {
+      display: block;
+      width: 100%;
+      margin: 30px auto 0 auto;
+      background: linear-gradient(90deg, #18bc9c, #00e8be);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(24, 188, 156, 0.3);
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      text-align: center;
+    }
+    .btn-back:hover {
+      background: linear-gradient(90deg, #00e8be, #18bc9c);
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 20px rgba(24, 188, 156, 0.4);
+      color: #fff;
+    }
+    .particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: rgba(24, 188, 156, 0.7);
+      border-radius: 50%;
+      animation: floatUp 6s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Glowing Particles -->
+  <script>
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+      particle.style.opacity = Math.random();
+      document.body.appendChild(particle);
+    }
+  </script>
+  <div class="container">
+    <div class="card">
+      <h2><i class="fas fa-user"></i> {{ employee.name }}</h2>
+      <ul class="info-list">
+       
+        <li><i class="fas fa-building"></i> <strong>Department:</strong> {{ employee.department }}</li>
+
+        <li><i class="fas fa-money-bill-wave"></i> <strong>Salary:</strong> ${{ employee.salary }}</li>
+      </ul>
+      <h4><i class="fas fa-calendar-check"></i> Attendance Records</h4>
+      <table class="table">
+        <tr>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+        {% for record in attendance_records %}
+        <tr>
+          <td>{{ record.date }}</td>
+          <td>{{ record.status }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="2">No attendance records found.</td></tr>
+        {% endfor %}
+      </table>
+      <a href="{% url 'employee_list' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Employee List</a>
+    </div>
+  </div>
+</body>
+</html>
