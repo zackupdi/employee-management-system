@@ -44,7 +44,8 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
+                    'django.contrib.auth.context_processors.auth',
+                    'employees.context_processors.notification_count',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -78,6 +79,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Optional: for static files in /static/
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Face recognition backend. False uses OpenCV LBPH and does not require dlib.
+USE_DLIB = False
+WORK_START = '08:00'
+GRACE_MINUTES = 15
+WORK_END = '16:00'
+MIN_CHECKOUT_MINUTES = 60
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
