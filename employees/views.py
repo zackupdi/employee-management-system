@@ -95,7 +95,34 @@ def signup_view(request):
         return redirect('login')
     return render(request, 'employees/signup.html')
 
+
+def _demo_user(role):
+    username = f'demo_{role}'
+    user, _ = UserModel.objects.get_or_create(username=username)
+    user.is_active = True
+    user.is_staff = role == 'admin'
+    user.is_superuser = role == 'admin'
+    user.set_unusable_password()
+    user.save(update_fields=['is_active', 'is_staff', 'is_superuser', 'password'])
+
+    if role == 'staff':
+        Employee.objects.get_or_create(
+            user=user,
+            defaults={
+                'name': 'Demo Staff',
+                'department': 'Demonstration',
+                'position': 'Staff Member',
+                'salary': Decimal('0.00'),
+            },
+        )
+    return user
+
+
 def login_view(request):
+    if settings.DEMO_MODE:
+        auth_login(request, _demo_user('admin'))
+        return redirect('home')
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -115,25 +142,7 @@ def demo_login(request, role):
     if not settings.DEMO_MODE or role not in {'admin', 'staff'}:
         raise PermissionDenied
 
-    username = f'demo_{role}'
-    user, created = UserModel.objects.get_or_create(username=username)
-    user.is_active = True
-    user.is_staff = role == 'admin'
-    user.is_superuser = role == 'admin'
-    user.set_unusable_password()
-    user.save(update_fields=['is_active', 'is_staff', 'is_superuser', 'password'])
-
-    if role == 'staff':
-        Employee.objects.get_or_create(
-            user=user,
-            defaults={
-                'name': 'Demo Staff',
-                'department': 'Demonstration',
-                'position': 'Staff Member',
-                'salary': Decimal('0.00'),
-            },
-        )
-
+    user = _demo_user(role)
     auth_login(request, user)
     return redirect('home' if role == 'admin' else 'staff_dashboard')
 
