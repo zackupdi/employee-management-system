@@ -107,7 +107,35 @@ def login_view(request):
             return redirect('staff_dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
-    return render(request, 'employees/login.html')
+    return render(request, 'employees/login.html', {'demo_mode': settings.DEMO_MODE})
+
+
+@require_POST
+def demo_login(request, role):
+    if not settings.DEMO_MODE or role not in {'admin', 'staff'}:
+        raise PermissionDenied
+
+    username = f'demo_{role}'
+    user, created = UserModel.objects.get_or_create(username=username)
+    user.is_active = True
+    user.is_staff = role == 'admin'
+    user.is_superuser = role == 'admin'
+    user.set_unusable_password()
+    user.save(update_fields=['is_active', 'is_staff', 'is_superuser', 'password'])
+
+    if role == 'staff':
+        Employee.objects.get_or_create(
+            user=user,
+            defaults={
+                'name': 'Demo Staff',
+                'department': 'Demonstration',
+                'position': 'Staff Member',
+                'salary': Decimal('0.00'),
+            },
+        )
+
+    auth_login(request, user)
+    return redirect('home' if role == 'admin' else 'staff_dashboard')
 
 def logout_view(request):
     logout(request)
