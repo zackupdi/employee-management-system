@@ -1,0 +1,65 @@
+{% extends "employees/base.html" %}
+{% block title %}Salary Requests | EMS Pro{% endblock %}
+{% block heading %}Salary Requests{% endblock %}
+{% block extra_css %}
+<style>
+.stepper{display:flex;align-items:flex-start;min-width:300px}.step{flex:1;position:relative;text-align:center}.step-circle{position:relative;z-index:2;width:28px;height:28px;margin:auto;display:grid;place-items:center;border-radius:50%;background:#152e26;border:2px solid #2b5447;color:#6f9389;font-size:11px;font-weight:800}.step-line{position:absolute;z-index:1;top:13px;left:50%;width:100%;height:2px;background:#2b5447}.step:last-child .step-line{display:none}.step-label{display:block;margin-top:5px;color:#6f9389;font-size:10px}.step.done .step-circle{background:linear-gradient(135deg,var(--g),var(--g2));border-color:var(--g);color:#032017}.step.done .step-label,.step.active .step-label{color:#b9eee1}.step.done .step-line{background:var(--g)}.step.active .step-circle{border-color:var(--g2);color:var(--g2);box-shadow:0 0 0 3px #16c79a22}.step.rejected .step-circle{background:#ff6b6b22;border-color:var(--danger);color:var(--danger)}.step.rejected .step-label{color:#ff9999}.action-btns{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+</style>
+{% endblock %}
+{% block content %}
+<div class="cardx">
+  <div class="panel-head">
+    <div>
+      <div class="section-title">{% if user.is_staff %}All salary requests{% else %}My salary requests{% endif %}</div>
+      <div class="muted small">Track each request through its approval workflow.</div>
+    </div>
+    <span class="badge badge-green rounded-pill px-3 py-2">{{ requests|length }} requests</span>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr><th>Employee</th><th>Amount</th><th>Reason</th><th>Date</th><th style="min-width:300px">Progress</th><th class="text-end">Action</th></tr>
+        </thead>
+        <tbody>
+          {% for req in requests %}
+          <tr>
+            <td><strong>{{ req.employee.employee_profile.name|default:req.employee.username }}</strong></td>
+            <td>${{ req.amount|default:"0.00" }}</td>
+            <td class="muted small">{{ req.reason|default:"-" }}</td>
+            <td class="muted small">{{ req.created_at|date:"M d, Y" }}</td>
+            <td>
+              {% if req.status == 'rejected' %}
+              <div class="stepper"><div class="step done rejected"><div class="step-circle"><i class="fa-solid fa-xmark"></i></div><div class="step-label">Rejected</div></div></div>
+              {% else %}
+              <div class="stepper">
+                <div class="step done"><div class="step-circle"><i class="fa-solid fa-check"></i></div><div class="step-line"></div><div class="step-label">Requested</div></div>
+                <div class="step {% if req.step_number == 1 %}active{% elif req.step_number > 1 %}done{% endif %}"><div class="step-circle">{% if req.step_number > 1 %}<i class="fa-solid fa-check"></i>{% else %}2{% endif %}</div><div class="step-line"></div><div class="step-label">Pending Review</div></div>
+                <div class="step {% if req.step_number == 2 %}active{% elif req.step_number > 2 %}done{% endif %}"><div class="step-circle">{% if req.step_number > 2 %}<i class="fa-solid fa-check"></i>{% else %}3{% endif %}</div><div class="step-line"></div><div class="step-label">Accepted</div></div>
+                <div class="step {% if req.step_number == 3 %}done active{% endif %}"><div class="step-circle">{% if req.step_number == 3 %}<i class="fa-solid fa-check"></i>{% else %}4{% endif %}</div><div class="step-label">Processed (Paid)</div></div>
+              </div>
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <div class="action-btns">
+                {% if user.is_staff and req.status == 'pending' %}
+                <form method="post" action="{% url 'accept_salary_request' req.pk %}">{% csrf_token %}<button class="btn btn-sm btn-green" type="submit"><i class="fa-solid fa-check me-1"></i>Accept</button></form>
+                <form method="post" action="{% url 'reject_salary_request' req.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit"><i class="fa-solid fa-xmark me-1"></i>Reject</button></form>
+                {% elif user.is_staff and req.status == 'accepted' %}
+                <form method="post" action="{% url 'process_salary_request' req.pk %}">{% csrf_token %}<button class="btn btn-sm btn-green" type="submit"><i class="fa-solid fa-money-bill-wave me-1"></i>Process Payment</button></form>
+                {% elif req.status == 'processed' %}<span class="badge badge-green"><i class="fa-solid fa-circle-check me-1"></i>Paid</span>
+                {% elif req.status == 'rejected' %}<span class="badge badge-red">Rejected</span>
+                {% endif %}
+                {% if req.status == 'pending' and request.user == req.employee or user.is_staff %}<form action="{% url 'delete_salary_request' req.pk %}" method="post" onsubmit="return confirm('Delete this request?');">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fa-solid fa-trash"></i></button></form>{% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6"><div class="empty"><i class="fa-solid fa-file-invoice-dollar fa-2x mb-3"></i><div>No salary requests found.</div></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

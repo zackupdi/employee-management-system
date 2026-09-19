@@ -1,0 +1,20 @@
+{% extends "employees/base.html" %}
+{% block title %}Request Leave | EMS Pro{% endblock %}
+{% block heading %}Request Leave{% endblock %}
+{% block extra_css %}<style>.leave-form input,.leave-form textarea{width:100%;background:#081611;border:1px solid #24473d;color:#fff;border-radius:9px;padding:11px 13px;outline:none}.leave-form input:focus,.leave-form textarea:focus{border-color:var(--g);box-shadow:0 0 0 .2rem #16c79a18}.field-error{color:var(--danger);font-size:12px;margin-top:5px}</style>{% endblock %}
+{% block content %}
+<div class="cardx" style="max-width:600px">
+  <div class="panel-head"><div><div class="section-title"><i class="fa-solid fa-plane-departure me-2" style="color:var(--g2)"></i>Request time off</div><div class="muted small">Choose your dates. The duration is calculated automatically.</div></div></div>
+  <div class="panel-body leave-form">
+    {% if messages %}{% for message in messages %}<div class="cardx mb-3" style="padding:12px 16px;border-color:#16c79a55">{{ message }}</div>{% endfor %}{% endif %}
+    {% if form.non_field_errors %}<div class="field-error mb-3">{{ form.non_field_errors|striptags }}</div>{% endif %}
+    <form method="post">{% csrf_token %}
+      <div class="mb-3"><label class="form-label" for="id_start_date">Start date</label>{{ form.start_date }}{% if form.start_date.errors %}<div class="field-error">{{ form.start_date.errors|striptags }}</div>{% endif %}</div>
+      <div class="mb-3"><label class="form-label" for="id_end_date">End date</label>{{ form.end_date }}{% if form.end_date.errors %}<div class="field-error">{{ form.end_date.errors|striptags }}</div>{% endif %}</div>
+      <div class="mb-4"><label class="form-label" for="id_reason">Reason (optional)</label>{{ form.reason }}{% if form.reason.errors %}<div class="field-error">{{ form.reason.errors|striptags }}</div>{% endif %}</div>
+      <button type="submit" class="btn btn-green"><i class="fa-solid fa-paper-plane me-1"></i>Submit Request</button>
+    </form>
+  </div>
+</div>
+<div class="cardx mt-3"><div class="panel-head"><div class="section-title">My leave history</div></div><div class="panel-body"><div class="table-responsive"><table class="table"><thead><tr><th>Dates</th><th>Days</th><th>Status</th></tr></thead><tbody>{% for leave in my_leaves %}<tr><td>{{ leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d, Y" }}</td><td>{{ leave.days_count }} day{{ leave.days_count|pluralize }}</td><td>{% if leave.status == 'approved' %}<span class="badge badge-green">Approved</span>{% elif leave.status == 'rejected' %}<span class="badge badge-red">Rejected</span>{% else %}<span class="badge badge-yellow">Pending</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="3"><div class="empty">No leave requests yet.</div></td></tr>{% endfor %}</tbody></table></div></div></div>
+{% endblock %}

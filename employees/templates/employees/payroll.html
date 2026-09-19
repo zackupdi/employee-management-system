@@ -1,0 +1,35 @@
+{% extends "employees/base.html" %}
+{% block title %}Payroll | EMS Pro{% endblock %}
+{% block heading %}Payroll{% endblock %}
+{% block extra_css %}
+<style>
+  .progress-wrap{width:100%;height:6px;background:#0e2119;border-radius:4px;overflow:hidden;margin-top:6px}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:4px}
+  .pay-form{display:flex;gap:6px;align-items:center;justify-content:flex-end}
+  .pay-form input,.period-select{padding:7px 9px;border-radius:8px;border:1px solid #24473d;background:#081611;color:#fff;font-size:13px}
+  .pay-form input{width:100px}.period-select{padding:9px 13px}
+</style>
+{% endblock %}
+{% block content %}
+{% if messages %}{% for message in messages %}<div class="cardx mb-3" style="padding:13px 18px;border-color:{% if message.tags == 'success' %}#16c79a55{% else %}#ff6b6b55{% endif %};">{{ message }}</div>{% endfor %}{% endif %}
+<div class="row g-3 mb-3">
+  <div class="col-md-3 col-6"><div class="cardx stat"><div class="stat-label">Total Payroll</div><div class="stat-value">${{ total_due|floatformat:2 }}</div></div></div>
+  <div class="col-md-3 col-6"><div class="cardx stat"><div class="stat-label">Paid Out</div><div class="stat-value">${{ total_paid|floatformat:2 }}</div></div></div>
+  <div class="col-md-3 col-6"><div class="cardx stat"><div class="stat-label">Remaining</div><div class="stat-value">${{ total_remaining|floatformat:2 }}</div></div></div>
+  <div class="col-md-3 col-6"><div class="cardx stat"><div class="stat-label">Fully Paid</div><div class="stat-value">{{ paid_count }}/{{ rows|length }}</div></div></div>
+</div>
+<div class="cardx">
+  <div class="panel-head"><div><div class="section-title">Payroll - {{ period }}</div><div class="muted small">{{ paid_count }} paid · {{ partial_count }} partial · {{ not_paid_count }} not paid</div></div><form method="get"><input type="month" name="period" class="period-select" value="{{ period }}" onchange="this.form.submit()"></form></div>
+  <div class="panel-body"><div class="table-responsive"><table class="table"><thead><tr><th>Employee</th><th>Salary</th><th>Paid</th><th>Remaining</th><th>Status</th><th>Date Paid</th><th class="text-end">Action</th></tr></thead><tbody>
+  {% for row in rows %}<tr>
+    <td><strong>{{ row.employee.name }}</strong><div class="muted small">{{ row.employee.position|default:"-" }}</div></td>
+    <td>${{ row.salary_due|floatformat:2 }}</td>
+    <td>${{ row.amount_paid|floatformat:2 }}<div class="progress-wrap"><div class="progress-bar" style="width:{% widthratio row.amount_paid row.salary_due 100 %}%"></div></div></td>
+    <td>{% if row.remaining > 0 %}<span style="color:var(--warning)">${{ row.remaining|floatformat:2 }}</span>{% else %}<span class="muted">$0.00</span>{% endif %}</td>
+    <td>{% if row.status == 'paid' %}<span class="badge badge-green">Paid</span>{% elif row.status == 'partial' %}<span class="badge badge-yellow">Partially Paid</span>{% else %}<span class="badge badge-red">Not Paid</span>{% endif %}</td>
+    <td class="muted small">{{ row.date_paid|date:"M d, Y"|default:"-" }}</td>
+    <td class="text-end">{% if row.status != 'paid' %}<form method="post" action="{% url 'record_payment' row.id %}" class="pay-form">{% csrf_token %}<input type="number" name="amount" step="0.01" min="0.01" max="{{ row.remaining }}" placeholder="Amount" required><button type="submit" class="btn btn-sm btn-green"><i class="fa-solid fa-dollar-sign"></i></button></form>{% else %}<span class="muted small">Complete</span>{% endif %}</td>
+  </tr>{% empty %}<tr><td colspan="7"><div class="empty">No employees found.</div></td></tr>{% endfor %}
+  </tbody></table></div></div>
+</div>
+{% endblock %}

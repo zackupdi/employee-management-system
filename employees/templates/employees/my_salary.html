@@ -1,0 +1,21 @@
+{% extends "employees/base.html" %}
+{% block title %}My Salary | EMS Pro{% endblock %}
+{% block heading %}My Salary{% endblock %}
+{% block extra_css %}
+<style>
+  .progress-wrap{width:100%;height:6px;background:#0e2119;border-radius:4px;overflow:hidden;margin-top:6px}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--g),var(--g2));border-radius:4px}
+</style>
+{% endblock %}
+{% block content %}
+{% if messages %}{% for message in messages %}<div class="cardx mb-3" style="padding:13px 18px;border-color:#ff6b6b55;"><i class="fa-solid fa-triangle-exclamation me-2" style="color:var(--danger)"></i>{{ message }}</div>{% endfor %}{% endif %}
+{% if employee %}
+<div class="row g-3 mb-3">
+  <div class="col-md-4 col-6"><div class="cardx stat"><div class="stat-label">Monthly Salary</div><div class="stat-value">${{ employee.salary|floatformat:2 }}</div></div></div>
+  <div class="col-md-4 col-6"><div class="cardx stat"><div class="stat-label">Paid{% if current %} - {{ current.period }}{% endif %}</div><div class="stat-value">${{ current.amount_paid|default:0|floatformat:2 }}</div></div></div>
+  <div class="col-md-4 col-6"><div class="cardx stat"><div class="stat-label">Remaining</div><div class="stat-value">${{ current.remaining|default:employee.salary|floatformat:2 }}</div></div></div>
+</div>
+{% if current %}<div class="cardx mb-3"><div class="panel-body"><div class="d-flex justify-content-between align-items-center mb-2"><div class="section-title">Current payment status</div>{% if current.status == 'paid' %}<span class="badge badge-green">Paid</span>{% elif current.status == 'partial' %}<span class="badge badge-yellow">Partially Paid</span>{% else %}<span class="badge badge-red">Not Paid</span>{% endif %}</div><div class="progress-wrap"><div class="progress-bar" style="width:{% widthratio current.amount_paid current.salary_due 100 %}%"></div></div><div class="muted small mt-2">${{ current.amount_paid|floatformat:2 }} of ${{ current.salary_due|floatformat:2 }} paid{% if current.date_paid %} · Last payment: {{ current.date_paid|date:"M d, Y" }}{% endif %}</div></div></div>{% endif %}
+<div class="cardx"><div class="panel-head"><div><div class="section-title">Payment history</div><div class="muted small">Total paid: ${{ total_earned|floatformat:2 }}</div></div></div><div class="panel-body"><div class="table-responsive"><table class="table"><thead><tr><th>Period</th><th>Salary</th><th>Paid</th><th>Remaining</th><th>Status</th><th>Date Paid</th></tr></thead><tbody>{% for payment in payments %}<tr><td><strong>{{ payment.period }}</strong></td><td>${{ payment.salary_due|floatformat:2 }}</td><td>${{ payment.amount_paid|floatformat:2 }}</td><td>{% if payment.remaining > 0 %}<span style="color:var(--warning)">${{ payment.remaining|floatformat:2 }}</span>{% else %}<span class="muted">$0.00</span>{% endif %}</td><td>{% if payment.status == 'paid' %}<span class="badge badge-green">Paid</span>{% elif payment.status == 'partial' %}<span class="badge badge-yellow">Partial</span>{% else %}<span class="badge badge-red">Not Paid</span>{% endif %}</td><td class="muted small">{{ payment.date_paid|date:"M d, Y"|default:"-" }}</td></tr>{% empty %}<tr><td colspan="6"><div class="empty">No salary records yet.</div></td></tr>{% endfor %}</tbody></table></div></div></div>
+{% else %}<div class="cardx"><div class="empty"><i class="fa-solid fa-user-slash fa-2x mb-3"></i><div>Your account is not linked to an employee profile yet.</div></div></div>{% endif %}
+{% endblock %}

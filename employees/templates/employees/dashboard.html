@@ -1,0 +1,216 @@
+{% extends "employees/base.html" %}
+{% block title %}Dashboard | EMS Pro{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+  .activity-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #18342b}
+  .activity-item:last-child{border-bottom:0}
+  .activity-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;font-size:13px}
+  .activity-g2{background:#27e0b01c;color:var(--g2)}
+  .activity-warning{background:#f4c95d1c;color:var(--warning)}
+  .activity-danger{background:#ff6b6b1c;color:var(--danger)}
+  .activity-text{font-size:13px;color:#dcefe8;line-height:1.5}
+  .activity-time{font-size:11px;color:#6f9389;margin-top:2px}
+  .report-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #18342b}
+  .report-row:last-child{border-bottom:0}
+  .report-label{color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px}
+  .report-value{font-weight:800;font:800 15px Manrope}
+  .alert-chip{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;margin-bottom:10px;font-size:13px}
+  .alert-chip.warn{background:#f4c95d14;border:1px solid #f4c95d40;color:#f5d67f}
+  .alert-chip.ok{background:#16c79a14;border:1px solid #16c79a40;color:#73e3ca}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Top stat cards -->
+<div class="row g-3 mb-3">
+  <div class="col-md-6 col-xl-3">
+    <div class="cardx stat">
+      <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+      <div class="stat-label">Total Employees</div>
+      <div class="stat-value">{{ employees_count }}</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="cardx stat">
+      <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+      <div class="stat-label">Present Today</div>
+      <div class="stat-value">{{ present_count }}</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="cardx stat">
+      <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
+      <div class="stat-label">Absent Today</div>
+      <div class="stat-value">{{ absent_count }}</div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="cardx stat">
+      <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+      <div class="stat-label">Departments</div>
+      <div class="stat-value">{{ department_count }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Action items alert -->
+{% if pending_salary_requests > 0 or pending_leave_requests > 0 %}
+<div class="cardx mb-3" style="padding:16px 18px;">
+  {% if pending_salary_requests > 0 %}
+  <div class="alert-chip warn">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>{{ pending_salary_requests }} salary request{{ pending_salary_requests|pluralize }} awaiting your review.</span>
+    <a href="{% url 'salary_requests_list' %}" class="btn btn-sm btn-soft ms-auto">Review</a>
+  </div>
+  {% endif %}
+  {% if pending_leave_requests > 0 %}
+  <div class="alert-chip warn">
+    <i class="fa-solid fa-plane-departure"></i>
+    <span>{{ pending_leave_requests }} leave request{{ pending_leave_requests|pluralize }} awaiting your review.</span>
+    <a href="{% url 'leave_requests_list' %}" class="btn btn-sm btn-soft ms-auto">Review</a>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="row g-3">
+  <!-- Quick actions + Recent activity -->
+  <div class="col-xl-8">
+    <div class="cardx mb-3">
+      <div class="panel-head">
+        <div>
+          <div class="section-title">Quick actions</div>
+          <div class="muted small">Common management tasks</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <a href="{% url 'employee_create' %}" class="text-decoration-none text-white">
+              <div class="cardx quick h-100"><i class="fa-solid fa-user-plus"></i>
+                <div class="fw-bold mt-3">Add Employee</div>
+                <div class="muted small">Create a new employee profile</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a href="{% url 'attendance' %}" class="text-decoration-none text-white">
+              <div class="cardx quick h-100"><i class="fa-solid fa-camera"></i>
+                <div class="fw-bold mt-3">Attendance</div>
+                <div class="muted small">Mark today's attendance</div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a href="{% url 'payroll' %}" class="text-decoration-none text-white">
+              <div class="cardx quick h-100"><i class="fa-solid fa-sack-dollar"></i>
+                <div class="fw-bold mt-3">Payroll</div>
+                <div class="muted small">Review payments</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cardx">
+      <div class="panel-head">
+        <div class="section-title">Recent activity</div>
+        <span class="badge badge-green rounded-pill px-3 py-2">Live</span>
+      </div>
+      <div class="panel-body">
+        {% for item in activity %}
+        <div class="activity-item">
+          <div class="activity-icon activity-{{ item.color }}">
+            <i class="fa-solid {{ item.icon }}"></i>
+          </div>
+          <div>
+            <div class="activity-text">{{ item.text }}</div>
+            <div class="activity-time">{{ item.time|timesince }} ago</div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty" style="padding:30px"><i class="fa-solid fa-inbox fa-2x mb-2"></i><div>No recent activity yet.</div></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily report + Payroll + System status -->
+  <div class="col-xl-4">
+    <div class="cardx mb-3">
+      <div class="panel-head">
+        <div>
+          <div class="section-title">Daily report</div>
+          <div class="muted small">{{ daily_report.date|date:"l, M d, Y" }}</div>
+        </div>
+        <i class="fa-solid fa-clipboard-list" style="color:var(--g2)"></i>
+      </div>
+      <div class="panel-body">
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-user-check" style="color:var(--g2)"></i> Present</span>
+          <span class="report-value">{{ daily_report.present }}/{{ daily_report.employees_total }}</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-user-xmark" style="color:var(--danger)"></i> Absent</span>
+          <span class="report-value">{{ daily_report.absent }}</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-user-clock" style="color:var(--warning)"></i> Not marked yet</span>
+          <span class="report-value">{{ daily_report.not_marked }}</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-chart-simple" style="color:var(--g2)"></i> Attendance rate</span>
+          <span class="report-value">{{ daily_report.attendance_pct }}%</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-money-bill-wave" style="color:var(--g2)"></i> Salary requests today</span>
+          <span class="report-value">{{ daily_report.new_salary_requests_today }}</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-plane-departure" style="color:var(--g2)"></i> Leave requests today</span>
+          <span class="report-value">{{ daily_report.new_leave_requests_today }}</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label"><i class="fa-solid fa-sack-dollar" style="color:var(--g2)"></i> Paid out today</span>
+          <span class="report-value">${{ daily_report.amount_paid_today|floatformat:0 }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cardx mb-3">
+      <div class="panel-head"><div class="section-title">Payroll — this month</div></div>
+      <div class="panel-body">
+        <div class="d-flex justify-content-between py-2 border-bottom" style="border-color:var(--line)!important;">
+          <span class="muted small">Total due</span><strong>${{ total_due|floatformat:0 }}</strong>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom" style="border-color:var(--line)!important;">
+          <span class="muted small">Paid</span><strong style="color:var(--g2)">${{ total_paid|floatformat:0 }}</strong>
+        </div>
+        <div class="d-flex justify-content-between py-2">
+          <span class="muted small">Remaining</span><strong style="color:var(--warning)">${{ total_remaining|floatformat:0 }}</strong>
+        </div>
+        <a href="{% url 'payroll' %}" class="btn btn-soft w-100 mt-3">View Payroll</a>
+      </div>
+    </div>
+
+    <div class="cardx">
+      <div class="panel-head"><div class="section-title">System status</div><span class="badge badge-green rounded-pill">Online</span></div>
+      <div class="panel-body">
+        <div class="d-flex justify-content-between py-2 border-bottom" style="border-color:var(--line)!important;">
+          <span class="muted">Employee records</span><i class="fa-solid fa-circle-check text-success"></i>
+        </div>
+        <div class="d-flex justify-content-between py-2 border-bottom" style="border-color:var(--line)!important;">
+          <span class="muted">Attendance</span><i class="fa-solid fa-circle-check text-success"></i>
+        </div>
+        <div class="d-flex justify-content-between py-2">
+          <span class="muted">Payroll</span><i class="fa-solid fa-circle-check text-success"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

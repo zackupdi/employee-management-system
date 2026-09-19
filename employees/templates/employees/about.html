@@ -1,0 +1,61 @@
+{% extends "employees/base.html" %}
+{% block title %}About | EMS Pro{% endblock %}
+{% block heading %}About{% endblock %}
+{% block content %}
+<div class="cardx">
+  <div class="panel-head">
+    <div>
+      <div class="section-title">About EMS Pro</div>
+      <div class="muted small">Modern employee management, attendance & payroll in one platform.</div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="muted" style="font-size:15px;line-height:1.8;max-width:720px;">
+      <strong style="color:var(--g2)">Employee Management System (EMS Pro)</strong> is a platform built to simplify
+      employee records, attendance tracking and salary requests for organizations — fast, reliable and easy to use.
+    </p>
+
+    <div class="row g-3 mt-2">
+      <div class="col-md-6 col-xl-3">
+        <div class="cardx quick h-100">
+          <i class="fa-solid fa-users"></i>
+          <div class="fw-bold mt-3">Employee Management</div>
+          <div class="muted small">Add, edit and manage employee records.</div>
+        </div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="cardx quick h-100">
+          <i class="fa-solid fa-calendar-check"></i>
+          <div class="fw-bold mt-3">Attendance Tracking</div>
+          <div class="muted small">Track daily attendance with clear reports.</div>
+        </div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="cardx quick h-100">
+          <i class="fa-solid fa-money-bill-wave"></i>
+          <div class="fw-bold mt-3">Salary Requests</div>
+          <div class="muted small">Submit and manage payroll requests.</div>
+        </div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="cardx quick h-100">
+          <i class="fa-solid fa-building"></i>
+          <div class="fw-bold mt-3">Departments</div>
+          <div class="muted small">Organize employees by department.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cardx mt-4" style="padding:22px;text-align:center;">
+      <div class="muted small mb-1">System Developed By</div>
+      <div style="font:800 20px Manrope;color:var(--g2)"><i class="fa-solid fa-code me-1"></i> Zakariya Abdirahman</div>
+      <div class="muted small">Full-Stack Developer</div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <a href="{% url 'home' %}" class="btn btn-soft"><i class="fa-solid fa-arrow-left me-1"></i> Back to Home</a>
+      <a href="{% url 'contact' %}" class="btn btn-green"><i class="fa-solid fa-envelope me-1"></i> Contact Us</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

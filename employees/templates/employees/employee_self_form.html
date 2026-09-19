@@ -1,0 +1,17 @@
+{% extends "employees/base.html" %}
+{% block title %}My Profile | EMS Pro{% endblock %}
+{% block heading %}My Profile{% endblock %}
+{% block content %}
+<div class="cardx" style="max-width:560px;">
+  <div class="panel-head"><div><div class="section-title">Update permitted details</div><div class="muted small">Administrative fields are protected.</div></div></div>
+  <div class="panel-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-3"><label class="form-label">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="small mt-1" style="color:var(--danger)">{{ field.errors|striptags }}</div>{% endif %}</div>
+      {% endfor %}
+      <div class="d-flex gap-2"><button type="submit" class="btn btn-green">Save changes</button><a href="{% url 'my_profile' %}" class="btn btn-soft">Cancel</a></div>
+    </form>
+  </div>
+</div>
+{% endblock %}

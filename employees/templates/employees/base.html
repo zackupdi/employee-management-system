@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}EMS Pro{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--g:#16c79a;--g2:#27e0b0;--g3:#0d8f70;--bg:#07110e;--panel:#0c1b16;--panel2:#10251e;--line:#1b3a31;--text:#f2fbf8;--muted:#91aaa2;--danger:#ff6b6b;--warning:#f4c95d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 75% 0%,#10352a 0,#07110e 34%,#050b09 100%);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}.sidebar{position:fixed;z-index:50;top:0;bottom:0;left:0;width:258px;padding:22px 15px;background:rgba(5,15,12,.94);backdrop-filter:blur(16px);border-right:1px solid var(--line)}.brand{display:flex;gap:11px;align-items:center;padding:8px 10px 27px;font-family:Manrope;font-weight:800;font-size:20px}.brand-mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--g),var(--g3));color:#032017;box-shadow:0 0 25px #16c79a30}.brand small{display:block;color:var(--muted);font:500 10px "DM Sans";letter-spacing:1.4px;margin-top:2px}.nav-title{font-size:10px;color:#58766d;letter-spacing:1.5px;text-transform:uppercase;padding:12px 12px 6px}.nav-link{display:flex;align-items:center;gap:12px;color:#9fb7b0;padding:11px 13px;border-radius:10px;margin:3px 0;transition:.2s}.nav-link i{width:19px;color:#62d9bd}.nav-link:hover,.nav-link.active{color:#fff;background:linear-gradient(90deg,#16c79a1d,transparent);box-shadow:inset 3px 0 0 var(--g)}.main{margin-left:258px;padding:27px 32px 45px;min-height:100vh}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.eyebrow{color:var(--g2);font-size:11px;text-transform:uppercase;letter-spacing:1.6px;font-weight:700}.heading{font:800 29px Manrope;margin:3px 0}.muted{color:var(--muted)}.top-user{display:flex;align-items:center;gap:10px}.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#16c79a1c;border:1px solid #16c79a45;color:var(--g2);font-weight:800}.cardx{background:linear-gradient(145deg,rgba(16,37,30,.95),rgba(9,24,19,.95));border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px #0004}.stat{padding:20px;min-height:145px;position:relative;overflow:hidden}.stat:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-55px;top:-55px;background:#16c79a0b}.stat-icon{width:45px;height:45px;border-radius:12px;background:#16c79a16;color:var(--g2);display:grid;place-items:center}.stat-label{font-size:12px;color:var(--muted);margin-top:16px}.stat-value{font:800 29px Manrope;margin-top:2px}.panel-head{padding:19px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.panel-body{padding:20px}.section-title{font:700 16px Manrope;margin:0}.btn-green{border:0;border-radius:9px;padding:10px 15px;background:linear-gradient(135deg,var(--g),var(--g2));color:#032017;font-weight:800}.btn-green:hover{color:#032017;filter:brightness(1.08)}.btn-soft{border:1px solid #2b5447;background:#102a22;color:#b9eee1;border-radius:9px;padding:9px 13px}.btn-soft:hover{border-color:var(--g);color:white}.table{--bs-table-bg:transparent;--bs-table-color:#eaf6f2;margin:0}.table th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6f9389;border-bottom:1px solid var(--line);padding:13px}.table td{border-color:#18342b;padding:13px;vertical-align:middle}.table tbody tr:hover{background:#16c79a08}.form-control,.form-select,.input-group-text{background:#081611;border:1px solid #24473d;color:white;border-radius:9px}.form-control::placeholder{color:#547169}.form-control:focus,.form-select:focus{background:#0a1b15;color:#fff;border-color:var(--g);box-shadow:0 0 0 .2rem #16c79a18}.form-label{font-size:12px;color:#a7c2ba;font-weight:600}.badge-green{background:#16c79a18;border:1px solid #16c79a45;color:#73e3ca}.badge-red{background:#ff6b6b14;border:1px solid #ff6b6b40;color:#ff9999}.badge-yellow{background:#f4c95d14;border:1px solid #f4c95d40;color:#f5d67f}.quick{padding:17px;transition:.2s}.quick:hover{transform:translateY(-2px);border-color:#16c79a55}.quick i{color:var(--g2);font-size:20px}.empty{padding:45px;text-align:center;color:#6f8c84}.mobile-menu{display:none}
+ .notif-wrap{position:relative}.notif-btn{position:relative;background:#102a22;border:1px solid #2b5447;color:#b9eee1;border-radius:10px;width:40px;height:40px;display:grid;place-items:center;cursor:pointer;font-size:16px}.notif-btn:hover{border-color:var(--g);color:#fff}.notif-badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 4px}.notif-dropdown{display:none;position:absolute;top:48px;right:0;width:320px;max-height:360px;overflow-y:auto;background:rgba(10,25,20,.98);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 50px #0006;z-index:200}.notif-dropdown.show{display:block}.notif-head{padding:14px 16px;font:700 13px Manrope;border-bottom:1px solid var(--line);color:#fff}.notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid #18342b}.notif-text{font-size:12.5px;color:#dcefe8;line-height:1.5}.notif-time{font-size:11px;color:#6f9389;margin-top:3px}.notif-empty{padding:24px;text-align:center;color:#6f8c84;font-size:13px}
+@media(max-width:1000px){.sidebar{width:78px}.brand-text,.nav-link span,.nav-title{display:none}.main{margin-left:78px;padding:22px}.nav-link{justify-content:center}.nav-link i{width:auto}.brand{justify-content:center;padding-left:0;padding-right:0}}
+.sidebar{overflow-y:auto;scrollbar-width:none}.sidebar::-webkit-scrollbar{display:none}
+@media(max-width:650px){.main{padding:16px}.topbar{gap:12px}.heading{font-size:23px}.hide-mobile{display:none!important}}
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<aside class="sidebar">
+<div class="brand"><div class="brand-mark"><i class="fa-solid fa-users-gear"></i></div><div class="brand-text">EMS Pro<small>EMPLOYEE MANAGEMENT</small></div></div>
+
+{% if user.is_staff %}
+<div class="nav-title">Workspace</div>
+<a class="nav-link active" href="{% url 'home' %}"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+<a class="nav-link" href="{% url 'employee_list' %}"><i class="fa-solid fa-users"></i><span>Employees</span></a>
+<a class="nav-link" href="{% url 'attendance' %}"><i class="fa-solid fa-calendar-check"></i><span>Attendance</span></a>
+{% else %}
+<div class="nav-title">Employee</div>
+<a class="nav-link active" href="{% url 'staff_dashboard' %}"><i class="fa-solid fa-gauge"></i><span>My Dashboard</span></a>
+<a class="nav-link" href="{% url 'my_profile' %}"><i class="fa-solid fa-id-card"></i><span>My Profile</span></a>
+<a class="nav-link" href="{% url 'my_attendance' %}"><i class="fa-solid fa-calendar-check"></i><span>My Attendance</span></a>
+<a class="nav-link" href="{% url 'my_schedule' %}"><i class="fa-solid fa-clock"></i><span>My Schedule</span></a>
+
+<a class="nav-link" href="{% url 'change_password' %}"><i class="fa-solid fa-key"></i><span>Change Password</span></a>
+
+{% endif %}
+
+<div class="nav-title">Finance</div>
+{% if user.is_staff %}
+<a class="nav-link" href="{% url 'salary_requests_list' %}"><i class="fa-solid fa-file-invoice-dollar"></i><span> Requests</span></a>
+<a class="nav-link" href="{% url 'payroll' %}"><i class="fa-solid fa-sack-dollar"></i><span>Payroll</span></a>
+<a class="nav-link" href="{% url 'notifications_inbox' %}"><i class="fa-solid fa-inbox"></i><span>Inbox{% if unread_notifications %} ({{ unread_notifications }}){% endif %}</span></a>
+{% else %}
+<a class="nav-link" href="{% url 'salary_requests_list' %}"><i class="fa-solid fa-file-invoice-dollar"></i><span>My Requests</span></a>
+<a class="nav-link" href="{% url 'my_salary' %}"><i class="fa-solid fa-wallet"></i><span>My Salary</span></a>
+<a class="nav-link" href="{% url 'request_salary' %}"><i class="fa-solid fa-money-bill-transfer"></i><span>Salary Request</span></a>
+{% endif %}
+<div class="nav-title">Leave</div>
+{% if not user.is_staff %}<a class="nav-link" href="{% url 'request_leave' %}"><i class="fa-solid fa-plane-departure"></i><span>Request Leave</span></a>{% endif %}
+<a class="nav-link" href="{% url 'leave_requests_list' %}"><i class="fa-solid fa-calendar-days"></i><span>{% if user.is_staff %}Leave Requests{% else %}My Leaves{% endif %}</span></a>
+<div class="nav-title">System</div>
+{% if user.is_staff %}
+<a class="nav-link" href="{% url 'about' %}"><i class="fa-solid fa-circle-info"></i><span>About</span></a>
+<a class="nav-link" href="{% url 'reports' %}"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+<a class="nav-link" href="{% url 'manage_users' %}"><i class="fa-solid fa-user-gear"></i><span>Manage Users</span></a>
+{% endif %}
+<a class="nav-link" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+</aside>
+<main class="main">
+<div class="topbar"><div><div class="eyebrow">Management workspace</div><div class="heading">{% block heading %}Dashboard{% endblock %}</div><div class="muted small">Manage people, attendance and payroll in one place.</div></div><div class="top-user">{% if not user.is_staff and notif_count is not None %}<div class="notif-wrap" id="notifWrap"><button class="notif-btn" id="notifBtn" type="button" aria-label="Notifications"><i class="fa-solid fa-bell"></i>{% if notif_count > 0 %}<span class="notif-badge">{{ notif_count }}</span>{% endif %}</button><div class="notif-dropdown" id="notifDropdown"><div class="notif-head">Notifications</div>{% for item in notif_items %}{% with leave=item.leave_request %}<a class="notif-item text-decoration-none" href="{% url 'notification_detail' item.pk %}">{% if leave.status == 'approved' %}<i class="fa-solid fa-circle-check" style="color:var(--g2)"></i>{% else %}<i class="fa-solid fa-circle-xmark" style="color:var(--danger)"></i>{% endif %}<div><div class="notif-text">Your leave ({{ leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d" }}) was <strong>{{ leave.get_status_display }}</strong> - {{ leave.days_count }} day{{ leave.days_count|pluralize }}</div><div class="notif-time">{{ item.created_at|timesince }} ago</div></div></a>{% endwith %}{% empty %}<div class="notif-empty">No new notifications.</div>{% endfor %}</div></div>{% endif %}<div class="hide-mobile text-end"><strong>{{ user.username|default:"Administrator" }}</strong><div class="muted small">Administrator</div></div><div class="avatar">{{ user.username|default:"A"|first|upper }}</div></div></div>
+{% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+<script>
+(function(){
+	const button=document.getElementById('notifBtn');
+	const dropdown=document.getElementById('notifDropdown');
+	const wrap=document.getElementById('notifWrap');
+	const badge=document.querySelector('.notif-badge');
+	if(!button||!dropdown||!wrap)return;
+	function csrf(){const match=document.cookie.match('(^|;)\\s*csrftoken\\s*=\\s*([^;]+)');return match?match.pop():'';}
+	button.addEventListener('click',function(event){event.stopPropagation();dropdown.classList.toggle('show');if(dropdown.classList.contains('show')&&badge){fetch('{% url "mark_notifications_read" %}',{method:'POST',headers:{'X-CSRFToken':csrf(),'X-Requested-With':'XMLHttpRequest'}}).then(function(){badge.remove();});}});
+	document.addEventListener('click',function(event){if(!wrap.contains(event.target))dropdown.classList.remove('show');});
+})();
+</script>
+</body></html>

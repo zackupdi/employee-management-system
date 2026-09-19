@@ -1,0 +1,124 @@
+{% extends 'employees/base.html' %}
+{% block title %}Today's Attendance | EMS{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <i class="fas fa-calendar-day"></i>
+    <div>
+      <h2>Attendance Report</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+        <i class="far fa-calendar"></i> {{ today|date:"l, F d, Y" }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Present Employees Section -->
+  <div style="margin-bottom: 2.5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+      <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-check" style="color: var(--success);"></i>
+        Present Employees
+        <span class="badge badge-success">{{ presents|length }}</span>
+      </h3>
+      {% if presents %}
+        <form method="POST" action="{% url 'clear_presents' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to clear all present records?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </form>
+      {% endif %}
+    </div>
+
+    {% if presents %}
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for present in presents %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><code>{{ present.employee.id }}</code></td>
+                <td><strong>{{ present.employee.name }}</strong></td>
+                <td><span class="badge badge-success">{{ present.status }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-user-slash"></i>
+        <p>No employees marked present today.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Absent Employees Section -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+      <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-times" style="color: var(--danger);"></i>
+        Absent Employees
+        <span class="badge badge-danger">{{ absents|length }}</span>
+      </h3>
+      {% if absents %}
+        <form method="POST" action="{% url 'clear_absents' %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to clear all absent records?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </form>
+      {% endif %}
+    </div>
+
+    {% if absents %}
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for absent in absents %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><code>{{ absent.employee.id }}</code></td>
+                <td><strong>{{ absent.employee.name }}</strong></td>
+                <td><span class="badge badge-danger">Absent</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-check-circle"></i>
+        <p>No absentees recorded today.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+    <a href="{% url 'attendance' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Attendance
+    </a>
+    <a href="{% url 'home' %}" class="btn btn-secondary">
+      <i class="fas fa-home"></i> Back to Home
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "employees/base.html" %}
+{% block title %}Employees | EMS Pro{% endblock %}
+{% block heading %}Employees{% endblock %}
+{% block content %}
+<div class="cardx">
+<div class="panel-head"><div><div class="section-title">Employee directory</div><div class="muted small">Search, review and manage employee records.</div></div><a href="{% url 'employee_create' %}" class="btn btn-green"><i class="fa-solid fa-plus me-1"></i> Add Employee</a></div>
+<div class="panel-body">
+<div class="row g-2 mb-3"><div class="col-md-7"><div class="input-group"><span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span><input id="employeeSearch" class="form-control" placeholder="Search by name, position, email or phone..."></div></div><div class="col-md-5 text-md-end"><span class="badge badge-green rounded-pill px-3 py-2">{{ employees|length }} records</span></div></div>
+<div class="table-responsive"><table class="table" id="employeeTable"><thead><tr><th>#</th><th>Employee</th><th>Position</th><th>Email</th><th>Phone</th><th class="text-end">Actions</th></tr></thead><tbody>
+{% for employee in employees %}
+<tr><td class="muted">{{ forloop.counter }}</td><td><div class="d-flex align-items-center gap-2"><div class="avatar">{{ employee.name|first|upper }}</div><div><strong>{{ employee.name }}</strong><div class="muted small">ID #{{ employee.id }}</div></div></div></td><td>{{ employee.position|default:"—" }}</td><td>{{ employee.email|default:"—" }}</td><td>{{ employee.phone|default:"—" }}</td><td class="text-end"><a href="{% url 'employee_detail' employee.id %}" class="btn btn-sm btn-soft" title="View"><i class="fa-solid fa-eye"></i></a> <a href="{% url 'employee_update' employee.id %}" class="btn btn-sm btn-green" title="Edit"><i class="fa-solid fa-pen"></i></a> <a href="{% url 'employee_delete' employee.id %}" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fa-solid fa-trash"></i></a></td></tr>
+{% empty %}<tr><td colspan="6"><div class="empty"><i class="fa-solid fa-users-slash fa-2x mb-3"></i><div>No employees found.</div></div></td></tr>{% endfor %}
+</tbody></table></div></div></div>
+{% endblock %}
+{% block extra_js %}<script>document.getElementById("employeeSearch").addEventListener("input",function(){const q=this.value.toLowerCase();document.querySelectorAll("#employeeTable tbody tr").forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?"":"none")});</script>{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "employees/base.html" %}
+
+{% block title %}My Dashboard | EMS Pro{% endblock %}
+{% block heading %}My Dashboard{% endblock %}
+
+{% block content %}
+<!-- Qaybta Koowaad: Kaararka Xogta Guud (Stats) -->
+<div class="row g-3 mb-4">
+    <!-- Magaca Shaqaalaha -->
+    <div class="col-md-4">
+        <div class="cardx stat">
+            <div class="stat-icon"><i class="fa-solid fa-user"></i></div>
+            <div class="stat-label">Employee</div>
+            <div class="stat-value" style="font-size: 22px;">{{ employee.name|default:user.username }}</div>
+        </div>
+    </div>
+    
+    <!-- Xaaladda Maanta -->
+    <div class="col-md-4">
+        <div class="cardx stat">
+            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="stat-label">Today's Status</div>
+            <div class="stat-value" style="font-size: 22px;">
+                {% if today_record.status %}
+                    <span class="badge-green" style="padding: 4px 10px; border-radius: 6px; font-size: 16px;">{{ today_record.status }}</span>
+                {% else %}
+                    <span class="muted">Not checked in</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Jadwalka Shaqada -->
+    <div class="col-md-4">
+        <div class="cardx stat">
+            <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+            <div class="stat-label">Schedule</div>
+            <div class="stat-value" style="font-size: 22px;">
+                {% if schedule %}
+                    {{ schedule.work_start|time:"H:i" }} - {{ schedule.work_end|time:"H:i" }}
+                {% else %}
+                    <span class="muted">No schedule</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Qaybta Labaad: Jadwalka iyo Mushaharka -->
+<div class="row g-3">
+    <!-- Recent Attendance -->
+    <div class="col-lg-7">
+        <div class="cardx">
+            <div class="panel-head">
+                <div class="section-title">
+                    <i class="fa-solid fa-list-check me-2" style="color: var(--g2);"></i>Recent Attendance
+                </div>
+                <a class="btn btn-sm btn-soft" href="{% url 'my_attendance' %}">View all</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.check_in|time:"H:i"|default:"-" }}</td>
+                            <td>{{ record.check_out|time:"H:i"|default:"-" }}</td>
+                            <td>
+                                {% if record.status == 'Present' or record.status == 'Checked In' %}
+                                    <span class="badge-green">{{ record.status }}</span>
+                                {% elif record.status == 'Absent' %}
+                                    <span class="badge-red">{{ record.status }}</span>
+                                {% elif record.status == 'Late' %}
+                                    <span class="badge-yellow">{{ record.status }}</span>
+                                {% else %}
+                                    <span class="muted">{{ record.status|default:"-" }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty">
+                                <i class="fa-solid fa-calendar-xmark fa-2x mb-2" style="color: var(--muted);"></i><br>
+                                No attendance records found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Salary Payments -->
+    <div class="col-lg-5">
+        <div class="cardx">
+            <div class="panel-head">
+                <div class="section-title">
+                    <i class="fa-solid fa-money-bill-wave me-2" style="color: var(--g2);"></i>Recent Payments
+                </div>
+                <a class="btn btn-sm btn-soft" href="{% url 'my_salary' %}">View salary</a>
+            </div>
+            <div class="panel-body">
+                {% for payment in payments %}
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom" style="border-color: var(--line) !important;">
+                    <div>
+                        <div class="fw-bold">{{ payment.period }}</div>
+                        <div class="muted small">Salary Payment</div>
+                    </div>
+                    <strong style="color: var(--g2); font-size: 18px;">${{ payment.amount_paid|floatformat:2 }}</strong>
+                </div>
+                {% empty %}
+                <div class="empty">
+                    <i class="fa-solid fa-wallet fa-2x mb-2" style="color: var(--muted);"></i><br>
+                    No payments yet.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

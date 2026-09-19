@@ -1,0 +1,4 @@
+{% extends "employees/base.html" %}
+{% block title %}My Attendance | EMS Pro{% endblock %}
+{% block heading %}My Attendance{% endblock %}
+{% block content %}<div class="cardx"><div class="panel-head"><div><div class="section-title">My attendance history</div><div class="muted small">Only your records are shown.</div></div></div><div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Working time</th></tr></thead><tbody>{% for record in attendance_records %}<tr><td>{{ record.date }}</td><td>{{ record.check_in|time:"H:i"|default:"-" }}</td><td>{{ record.check_out|time:"H:i"|default:"-" }}</td><td>{{ record.status }}</td><td>{% if record.working_minutes %}{{ record.working_minutes }} minutes{% else %}-{% endif %}</td></tr>{% empty %}<tr><td colspan="5"><div class="empty">No attendance records yet.</div></td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "employees/base.html" %}
+{% block title %}Delete Employee | EMS Pro{% endblock %}
+{% block heading %}Delete Employee{% endblock %}
+{% block content %}
+<div class="cardx" style="max-width:460px;">
+  <div class="panel-body text-center">
+    <div class="stat-icon mx-auto mb-3" style="width:56px;height:56px;font-size:22px;color:var(--danger);background:#ff6b6b16;">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <div class="section-title mb-2">Delete employee?</div>
+    <p class="muted">Are you sure you want to delete <strong style="color:#fff">{{ employee.name }}</strong>? This cannot be undone.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="d-flex gap-2 justify-content-center mt-3">
+        <button type="submit" class="btn btn-sm" style="background:linear-gradient(135deg,#ff6b6b,#ff9999);color:#2a0808;font-weight:800;border:0;border-radius:9px;padding:10px 18px;">
+          <i class="fa-solid fa-trash me-1"></i> Yes, Delete
+        </button>
+        <a href="{% url 'employee_list' %}" class="btn btn-soft"><i class="fa-solid fa-arrow-left me-1"></i> Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

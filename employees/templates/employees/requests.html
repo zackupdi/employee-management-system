@@ -1,0 +1,92 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Codsi Mushahar & Fasax - EMS Pro{% endblock %}
+
+{% block heading %}Codsi Mushahar & Fasax{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="cardx">
+            <div class="panel-head">
+                <div class="section-title">
+                    <i class="fa-solid fa-file-signature me-2" style="color: var(--g2);"></i> Foomka Codsiga
+                </div>
+                <span class="muted small">Waxaad codsan kartaa Mushahar, Hordhac, ama Fasax wakhti walba.</span>
+            </div>
+            
+            <div class="panel-body">
+                <form method="POST" action="{% url 'request_salary' %}">
+                    {% csrf_token %}
+                    
+                    <!-- Nooca Codsiga -->
+                    <div class="mb-3">
+                        <label for="request_type" class="form-label">Nooca Codsiga:</label>
+                        <select id="request_type" name="request_type" class="form-select" onchange="toggleFields()" required>
+                            <option value="salary">💰 Mushahar Caadi ah (Salary)</option>
+                            <option value="advance">💸 Mushahar Hordhac ah / Amaah (Advance/Loan)</option>
+                            <option value="leave">🏖️ Fasax (Leave)</option>
+                        </select>
+                    </div>
+
+                    <!-- Lacagta (Waxay muuqanaysaa haddii uu doorto Mushahar ama Hordhac) -->
+                    <div class="mb-3" id="amount_group">
+                        <label for="amount" class="form-label">Lacagta la codsanayo ($):</label>
+                        <input type="number" id="amount" name="amount" class="form-control" step="0.01" placeholder="Geli lacagta...">
+                    </div>
+
+                    <!-- Maalmaha Fasaxa (Waxay muuqanaysaa haddii uu doorto Fasax) -->
+                    <div class="mb-3 d-none" id="leave_days_group">
+                        <label for="leave_days" class="form-label">Tirada Maalmaha Fasaxa:</label>
+                        <input type="number" id="leave_days" name="leave_days" class="form-control" placeholder="Tusaale: 3">
+                    </div>
+
+                    <!-- Sababta -->
+                    <div class="mb-4">
+                        <label for="reason" class="form-label">Sababta / Faahfaahin:</label>
+                        <textarea id="reason" name="reason" class="form-control" rows="4" placeholder="Sharax sababta codsigaaga..."></textarea>
+                    </div>
+
+                    <!-- Badhamada (Buttons) -->
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-green flex-grow-1">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Dir Codsiga
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-soft">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Back to Home
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // JavaScript-kan wuxuu si toos ah u bedelayaa foomka iyadoo ku xiran nooca uu qofku dooranayo
+    function toggleFields() {
+        const type = document.getElementById('request_type').value;
+        const amountGroup = document.getElementById('amount_group');
+        const leaveGroup = document.getElementById('leave_days_group');
+        const amountInput = document.getElementById('amount');
+        const leaveInput = document.getElementById('leave_days');
+        
+        if (type === 'leave') {
+            amountGroup.classList.add('d-none');
+            leaveGroup.classList.remove('d-none');
+            amountInput.required = false;
+            leaveInput.required = true;
+        } else {
+            amountGroup.classList.remove('d-none');
+            leaveGroup.classList.add('d-none');
+            amountInput.required = true;
+            leaveInput.required = false;
+        }
+    }
+    
+    // Marka page-ka la furo si default ah u shaqeysii
+    document.addEventListener('DOMContentLoaded', toggleFields);
+</script>
+{% endblock %}
