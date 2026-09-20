@@ -101,6 +101,6 @@ MIN_CHECKOUT_MINUTES = 60
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth Redirects
-LOGIN_URL = '/employees/login/'
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/employees/dashboard/'
 LOGOUT_REDIRECT_URL = '/employees/login/'

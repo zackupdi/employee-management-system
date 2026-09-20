@@ -17,11 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.shortcuts import redirect
+from django.urls import include, path
+
+
+def root_login(request):
+    return redirect("/employees/demo/")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('employees/', include('employees.urls')),
+    path("admin/", admin.site.urls),
+    path("login/", root_login, name="root_login"),
+    path("employees/", include("employees.urls")),
 ]
 
 if settings.DEBUG:
