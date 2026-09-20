@@ -128,7 +128,7 @@ def _demo_user(role):
 def login_view(request):
     # Demo mode = no normal login
     if demo_mode_enabled():
-        return render(request, 'employees/login.html')
+        return redirect("demo_login")
 
     if request.user.is_authenticated:
         if request.user.is_superuser:
