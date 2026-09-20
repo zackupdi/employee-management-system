@@ -17,6 +17,7 @@ from django.conf import settings
 import csv
 import base64
 import json
+import os
 from io import BytesIO
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
@@ -96,14 +97,20 @@ def signup_view(request):
     return render(request, 'employees/signup.html')
 
 
+def demo_mode_enabled():
+    return os.environ.get('DEMO_MODE', '').lower() == 'true'
+
+
 def _demo_user(role):
     username = f'demo_{role}'
     user, _ = UserModel.objects.get_or_create(username=username)
+    user.first_name = 'Demo'
+    user.last_name = 'Admin' if role == 'admin' else 'Staff'
     user.is_active = True
-    user.is_staff = role == 'admin'
+    user.is_staff = True
     user.is_superuser = role == 'admin'
     user.set_unusable_password()
-    user.save(update_fields=['is_active', 'is_staff', 'is_superuser', 'password'])
+    user.save(update_fields=['first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser', 'password'])
 
     if role == 'staff':
         Employee.objects.get_or_create(
@@ -119,36 +126,108 @@ def _demo_user(role):
 
 
 def login_view(request):
-    if settings.DEMO_MODE:
-        auth_login(request, _demo_user('admin'))
-        return redirect('home')
+    # Demo mode = no normal login
+    if demo_mode_enabled():
+        return render(request, 'employees/login.html')
+
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('dashboard')
+        return redirect('staff_dashboard')
 
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            if user.is_staff:
-                return redirect('home')
+            request.session.pop('demo_mode', None)
+            request.session.pop('demo_role', None)
+            request.session.pop('demo_user', None)
+            if user.is_superuser:
+                return redirect('dashboard')
             return redirect('staff_dashboard')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'employees/login.html', {'demo_mode': settings.DEMO_MODE})
+        messages.error(request, 'Invalid username or password.')
+
+    return render(request, 'employees/login.html')
 
 
-@require_POST
-def demo_login(request, role):
-    if not settings.DEMO_MODE or role not in {'admin', 'staff'}:
-        raise PermissionDenied
+def demo_login(request):
+    """
+    Direct demo login.
 
-    user = _demo_user(role)
-    auth_login(request, user)
-    return redirect('home' if role == 'admin' else 'staff_dashboard')
+    /demo/?role=admin
+    /demo/?role=staff
+    """
+
+    if not demo_mode_enabled():
+        return redirect("login")
+
+    User = get_user_model()
+    role = request.GET.get("role", "admin").strip().lower()
+
+    if role == "admin":
+        user, created = User.objects.get_or_create(
+            username="demo_admin"
+        )
+
+        user.first_name = "Demo"
+        user.last_name = "Admin"
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.set_unusable_password()
+        user.save()
+
+        auth_login(request, user)
+        request.session["demo_mode"] = True
+        request.session["demo_role"] = "admin"
+        request.session.modified = True
+        return redirect("/employees/dashboard/")
+
+    if role == "staff":
+        user, created = User.objects.get_or_create(
+            username="demo_staff"
+        )
+
+        user.first_name = "Demo"
+        user.last_name = "Staff"
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = False
+        user.set_unusable_password()
+        user.save()
+
+        auth_login(request, user)
+        request.session["demo_mode"] = True
+        request.session["demo_role"] = "staff"
+        request.session.modified = True
+        return redirect("/employees/staff/dashboard/")
+
+    return redirect("/employees/demo/?role=admin")
+
+
+def demo_logout(request):
+    logout(request)
+    request.session.flush()
+
+    if demo_mode_enabled():
+        return redirect("/employees/demo/")
+    return redirect("/employees/login/")
+
 
 def logout_view(request):
+    request.session.pop('demo_mode', None)
+    request.session.pop('demo_role', None)
+    request.session.pop('demo_user', None)
     logout(request)
     return redirect('login')
+
+
+@login_required
+def dashboard(request):
+    return render(request, 'employees/dashboard.html')
+
 
 @login_required
 def home(request):
@@ -165,17 +244,12 @@ def home(request):
     })
 
 
-@employee_required
+@login_required
 def staff_dashboard(request):
-    employee = request.user.employee_profile
-    records = Attendance.objects.filter(employee=employee).order_by('-date')
-    return render(request, 'employees/staff_dashboard.html', {
-        'employee': employee,
-        'today_record': records.filter(date=timezone.localdate()).first(),
-        'attendance_records': records[:10],
-        'payments': SalaryPayment.objects.filter(employee=employee).order_by('-period')[:6],
-        'schedule': employee.assigned_schedule,
-    })
+    return render(
+        request,
+        'employees/staff_dashboard.html'
+    )
 
 
 @employee_required

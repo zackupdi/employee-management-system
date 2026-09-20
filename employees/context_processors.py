@@ -1,3 +1,5 @@
+import os
+
 from .models import Notification
 
 
@@ -13,4 +15,10 @@ def notification_count(request):
         'unread_notifications': notifications.count(),
         'notif_count': leave_notifications.count(),
         'notif_items': leave_notifications[:6],
+    }
+
+
+def demo_mode(request):
+    return {
+        'demo_mode': os.environ.get('DEMO_MODE', '').lower() == 'true',
     }

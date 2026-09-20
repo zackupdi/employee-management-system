@@ -4,6 +4,10 @@
 {% block heading %}My Dashboard{% endblock %}
 
 {% block content %}
+{% if request.session.demo_mode %}
+
+{% endif %}
+
 <!-- Qaybta Koowaad: Kaararka Xogta Guud (Stats) -->
 <div class="row g-3 mb-4">
     <!-- Magaca Shaqaalaha -->

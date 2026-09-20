@@ -50,8 +50,9 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'employees.context_processors.notification_count',
+                'django.contrib.auth.context_processors.auth',
+                'employees.context_processors.notification_count',
+                'employees.context_processors.demo_mode',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -100,5 +101,5 @@ MIN_CHECKOUT_MINUTES = 60
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth Redirects
-LOGIN_URL = '/login/'
+LOGIN_URL = '/employees/login/'
 LOGOUT_REDIRECT_URL = 'login'
