@@ -26,6 +26,7 @@ def root_login(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", root_login, name="root"),
     path("login/", root_login, name="root_login"),
     path("employees/", include("employees.urls")),
 ]
