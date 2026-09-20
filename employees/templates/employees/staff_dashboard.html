@@ -5,7 +5,13 @@
 
 {% block content %}
 {% if request.session.demo_mode %}
-
+<div class="demo-switch" style="margin-bottom:20px;padding:12px;border:1px solid rgba(100,200,170,0.15);border-radius:14px;background:rgba(18,45,36,0.8);">
+    <div style="margin-bottom:9px;color:#8fb8aa;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Demo Mode</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="{% url 'demo_login' %}?role=admin" style="flex:1;padding:9px 10px;border-radius:9px;text-align:center;text-decoration:none;font-size:12px;font-weight:700;background:#174c3b;color:#b9eee1;border:1px solid #286d56;">Admin Dashboard</a>
+        <a href="{% url 'demo_login' %}?role=staff" style="flex:1;padding:9px 10px;border-radius:9px;text-align:center;text-decoration:none;font-size:12px;font-weight:700;background:#172822;color:#b0cfc5;border:1px solid #365148;">Staff Dashboard</a>
+    </div>
+</div>
 {% endif %}
 
 <!-- Qaybta Koowaad: Kaararka Xogta Guud (Stats) -->
