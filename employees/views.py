@@ -128,7 +128,7 @@ def _demo_user(role):
 def login_view(request):
     # Demo mode = no normal login
     if demo_mode_enabled():
-        return redirect("demo_login")
+        return render(request, "employees/login.html")
 
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -205,7 +205,7 @@ def demo_logout(request):
     request.session.flush()
 
     if demo_mode_enabled():
-        return redirect("/employees/demo/")
+        return redirect("/employees/login/")
     return redirect("/employees/login/")
 
 

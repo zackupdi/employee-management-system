@@ -22,7 +22,7 @@ from django.urls import include, path
 
 
 def root_login(request):
-    return redirect("/employees/demo/")
+    return redirect("/employees/login/")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
