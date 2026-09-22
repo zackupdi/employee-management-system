@@ -1,149 +1,86 @@
 {% extends "employees/base.html" %}
 
-{% block title %}My Dashboard | EMS Pro{% endblock %}
-{% block heading %}My Dashboard{% endblock %}
+{% block title %}Staff Dashboard | EMS Pro{% endblock %}
+{% block heading %}Staff Dashboard{% endblock %}
 
 {% block extra_css %}
 <style>
-    .account-switch { margin-bottom: 20px; padding: 18px 20px; border: 1px solid #1d4437; border-radius: 18px; background: linear-gradient(135deg, #0a1d18, #102b23); box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }
-    .account-switch-title { margin-bottom: 14px; color: #a8d8c8; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-align: center; text-transform: uppercase; }
-    .account-switch-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .account-switch-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 10px 14px; border: 1px solid #2d5d50; border-radius: 11px; background: #0d221c; color: #dff9f0; font-weight: 800; text-decoration: none; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
-    .account-switch-link:hover { border-color: #4f8d7a; background: #12342d; color: #fff; text-decoration: none; transform: translateY(-1px); }
-    @media (max-width: 520px) { .account-switch-links { grid-template-columns: 1fr; } }
+	.staff-welcome{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 28px;margin-bottom:22px;border:1px solid rgba(24,188,156,.25);border-radius:18px;background:linear-gradient(120deg,rgba(24,188,156,.2),rgba(0,0,0,.3))}
+	.staff-welcome h2{margin:0 0 7px;font:800 23px Manrope;color:#eafff9}
+	.staff-welcome p{margin:0;color:#9eb7b2;font-size:14px}
+	.staff-welcome-icon{font-size:52px;color:var(--g2);filter:drop-shadow(0 0 15px rgba(39,224,176,.35))}
+	.account-switch{padding:18px 20px;margin-bottom:22px;border:1px solid #1d4437;border-radius:18px;background:linear-gradient(135deg,#0a1d18,#102b23);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+	.account-switch-title{margin-bottom:14px;color:#a8d8c8;font-size:13px;font-weight:800;letter-spacing:.12em;text-align:center;text-transform:uppercase}
+	.account-switch-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+	.account-switch-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:11px 14px;border:1px solid #2d5d50;border-radius:11px;background:#0d221c;color:#dff9f0;font-weight:800;text-decoration:none;transition:background .15s ease,border-color .15s ease,transform .15s ease}
+	.account-switch-link:hover{border-color:var(--g2);background:#12342d;color:#fff;text-decoration:none;transform:translateY(-2px)}
+	.staff-stat{height:100%;padding:20px;border:1px solid rgba(24,188,156,.15);border-radius:15px;background:rgba(255,255,255,.035)}
+	.staff-stat-top{display:flex;align-items:center;justify-content:space-between;color:#dcefe8;font-size:14px}
+	.staff-stat-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:rgba(24,188,156,.12);color:var(--g2)}
+	.staff-stat-value{margin-top:15px;font:800 25px Manrope;color:#fff}
+	.staff-stat-label{margin-top:3px;color:#849b97;font-size:13px}
+	.staff-panel{height:100%;padding:22px;border:1px solid rgba(24,188,156,.15);border-radius:16px;background:rgba(255,255,255,.035)}
+	.staff-panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;color:#fff;font:800 17px Manrope}
+	.staff-panel-title i{color:var(--g2)}
+	.attendance-status{display:flex;align-items:center;gap:15px;padding:18px;margin-bottom:15px;border-radius:12px;background:rgba(24,188,156,.07)}
+	.status-circle{width:50px;height:50px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:rgba(24,188,156,.15);color:var(--g2);font-size:20px}
+	.attendance-status h4{margin:0;font-size:15px}.attendance-status p{margin:4px 0 0;color:#8ca19d;font-size:12px}.status-badge{margin-left:auto;padding:6px 12px;border-radius:20px;background:rgba(24,188,156,.12);color:var(--g2);font-size:11px;white-space:nowrap}
+	.staff-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+	.staff-action{display:block;padding:18px;border:1px solid rgba(24,188,156,.12);border-radius:12px;background:rgba(24,188,156,.07);color:#fff;text-decoration:none;transition:.2s ease}.staff-action:hover{border-color:var(--g2);background:rgba(24,188,156,.15);color:#fff;text-decoration:none;transform:translateY(-2px)}.staff-action i{display:block;margin-bottom:10px;color:var(--g2);font-size:20px}.staff-action strong{display:block;font-size:13px}.staff-action span{color:#718883;font-size:11px}
+	@media(max-width:700px){.staff-welcome{align-items:flex-start;flex-direction:column}.staff-welcome-icon{font-size:40px}.account-switch-links,.staff-actions{grid-template-columns:1fr}.attendance-status{align-items:flex-start;flex-wrap:wrap}.status-badge{margin-left:65px}}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="account-switch">
-    <div class="account-switch-title">Switch Workspace</div>
-    <div class="account-switch-links">
-        <a href="{% url 'demo_login' %}?role=admin" class="account-switch-link"><i class="fa-solid fa-shield-halved"></i>Admin Dashboard</a>
-        <a href="{% url 'demo_login' %}?role=staff" class="account-switch-link"><i class="fa-solid fa-user"></i>Staff Dashboard</a>
-    </div>
+	<div class="account-switch-title">Switch User</div>
+	<div class="account-switch-links">
+		<a href="{% url 'demo_login' %}?role=admin" class="account-switch-link"><i class="fa-solid fa-shield-halved"></i>Admin Dashboard</a>
+		<a href="{% url 'demo_login' %}?role=staff" class="account-switch-link"><i class="fa-solid fa-user"></i>Staff Dashboard</a>
+	</div>
 </div>
 
-<!-- Qaybta Koowaad: Kaararka Xogta Guud (Stats) -->
+<section class="staff-welcome">
+	<div>
+		<h2>Welcome back, {{ employee.name|default:user.username }}</h2>
+		<p>Here is your personal employee overview for today.</p>
+	</div>
+	<div class="staff-welcome-icon"><i class="fa-solid fa-chart-line"></i></div>
+</section>
 <div class="row g-3 mb-4">
-    <!-- Magaca Shaqaalaha -->
-    <div class="col-md-4">
-        <div class="cardx stat">
-            <div class="stat-icon"><i class="fa-solid fa-user"></i></div>
-            <div class="stat-label">Employee</div>
-            <div class="stat-value" style="font-size: 22px;">{{ employee.name|default:user.username }}</div>
-        </div>
-    </div>
-    
-    <!-- Xaaladda Maanta -->
-    <div class="col-md-4">
-        <div class="cardx stat">
-            <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
-            <div class="stat-label">Today's Status</div>
-            <div class="stat-value" style="font-size: 22px;">
-                {% if today_record.status %}
-                    <span class="badge-green" style="padding: 4px 10px; border-radius: 6px; font-size: 16px;">{{ today_record.status }}</span>
-                {% else %}
-                    <span class="muted">Not checked in</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    
-    <!-- Jadwalka Shaqada -->
-    <div class="col-md-4">
-        <div class="cardx stat">
-            <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
-            <div class="stat-label">Schedule</div>
-            <div class="stat-value" style="font-size: 22px;">
-                {% if schedule %}
-                    {{ schedule.work_start|time:"H:i" }} - {{ schedule.work_end|time:"H:i" }}
-                {% else %}
-                    <span class="muted">No schedule</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	<div class="col-md-4"><div class="staff-stat"><div class="staff-stat-top">Attendance <span class="staff-stat-icon"><i class="fa-solid fa-calendar-check"></i></span></div><div class="staff-stat-value">{{ attendance_records|length }}</div><div class="staff-stat-label">Recent records</div></div></div>
+	<div class="col-md-4"><div class="staff-stat"><div class="staff-stat-top">Salary <span class="staff-stat-icon"><i class="fa-solid fa-wallet"></i></span></div><div class="staff-stat-value">{{ payments|length }}</div><div class="staff-stat-label">Recent payments</div></div></div>
+	<div class="col-md-4"><div class="staff-stat"><div class="staff-stat-top">Schedule <span class="staff-stat-icon"><i class="fa-solid fa-clock"></i></span></div><div class="staff-stat-value">{% if schedule %}{{ schedule.work_start|time:"H:i" }}{% else %}-{% endif %}</div><div class="staff-stat-label">Today's start time</div></div></div>
 </div>
 
-<!-- Qaybta Labaad: Jadwalka iyo Mushaharka -->
 <div class="row g-3">
-    <!-- Recent Attendance -->
-    <div class="col-lg-7">
-        <div class="cardx">
-            <div class="panel-head">
-                <div class="section-title">
-                    <i class="fa-solid fa-list-check me-2" style="color: var(--g2);"></i>Recent Attendance
-                </div>
-                <a class="btn btn-sm btn-soft" href="{% url 'my_attendance' %}">View all</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Check-in</th>
-                            <th>Check-out</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for record in attendance_records %}
-                        <tr>
-                            <td>{{ record.date }}</td>
-                            <td>{{ record.check_in|time:"H:i"|default:"-" }}</td>
-                            <td>{{ record.check_out|time:"H:i"|default:"-" }}</td>
-                            <td>
-                                {% if record.status == 'Present' or record.status == 'Checked In' %}
-                                    <span class="badge-green">{{ record.status }}</span>
-                                {% elif record.status == 'Absent' %}
-                                    <span class="badge-red">{{ record.status }}</span>
-                                {% elif record.status == 'Late' %}
-                                    <span class="badge-yellow">{{ record.status }}</span>
-                                {% else %}
-                                    <span class="muted">{{ record.status|default:"-" }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4" class="empty">
-                                <i class="fa-solid fa-calendar-xmark fa-2x mb-2" style="color: var(--muted);"></i><br>
-                                No attendance records found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-7">
+		<div class="staff-panel">
+			<div class="staff-panel-title"><span><i class="fa-solid fa-calendar-day me-2"></i>Today's Attendance</span></div>
+			<div class="attendance-status">
+				<div class="status-circle"><i class="fa-solid fa-user-check"></i></div>
+				<div><h4>Today's Status</h4><p>Check-in: {{ today_record.check_in|time:"H:i"|default:"Not checked in" }}</p><p>Check-out: {{ today_record.check_out|time:"H:i"|default:"Not checked out" }}</p></div>
+				<span class="status-badge">{{ today_record.status|default:"Not Marked" }}</span>
+			</div>
+			<a href="{% url 'my_attendance' %}" class="staff-action"><i class="fa-solid fa-arrow-right"></i><strong>View My Attendance</strong><span>Check your attendance history</span></a>
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<div class="staff-panel">
+			<div class="staff-panel-title"><span><i class="fa-solid fa-bolt me-2"></i>Quick Actions</span></div>
+			<div class="staff-actions">
+				<a href="{% url 'my_attendance' %}" class="staff-action"><i class="fa-solid fa-fingerprint"></i><strong>Attendance</strong><span>View attendance</span></a>
+				<a href="{% url 'request_salary' %}" class="staff-action"><i class="fa-solid fa-file-invoice-dollar"></i><strong>Salary Request</strong><span>Send request</span></a>
+				<a href="{% url 'my_profile' %}" class="staff-action"><i class="fa-solid fa-user"></i><strong>My Profile</strong><span>View information</span></a>
+				<a href="{% url 'my_salary' %}" class="staff-action"><i class="fa-solid fa-wallet"></i><strong>My Salary</strong><span>View payments</span></a>
+			</div>
+		</div>
+</div>
 
-    <!-- Recent Salary Payments -->
-    <div class="col-lg-5">
-        <div class="cardx">
-            <div class="panel-head">
-                <div class="section-title">
-                    <i class="fa-solid fa-money-bill-wave me-2" style="color: var(--g2);"></i>Recent Payments
-                </div>
-                <a class="btn btn-sm btn-soft" href="{% url 'my_salary' %}">View salary</a>
-            </div>
-            <div class="panel-body">
-                {% for payment in payments %}
-                <div class="d-flex justify-content-between align-items-center py-3 border-bottom" style="border-color: var(--line) !important;">
-                    <div>
-                        <div class="fw-bold">{{ payment.period }}</div>
-                        <div class="muted small">Salary Payment</div>
-                    </div>
-                    <strong style="color: var(--g2); font-size: 18px;">${{ payment.amount_paid|floatformat:2 }}</strong>
-                </div>
-                {% empty %}
-                <div class="empty">
-                    <i class="fa-solid fa-wallet fa-2x mb-2" style="color: var(--muted);"></i><br>
-                    No payments yet.
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+<div class="staff-panel mt-3">
+	<div class="staff-panel-title"><span><i class="fa-solid fa-list-check me-2"></i>Recent Attendance</span><a class="btn btn-sm btn-soft" href="{% url 'my_attendance' %}">View all</a></div>
+	<div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr></thead><tbody>
+		{% for record in attendance_records %}<tr><td>{{ record.date }}</td><td>{{ record.check_in|time:"H:i"|default:"-" }}</td><td>{{ record.check_out|time:"H:i"|default:"-" }}</td><td><span class="badge-green">{{ record.status|default:"-" }}</span></td></tr>{% empty %}<tr><td colspan="4" class="empty">No attendance records found.</td></tr>{% endfor %}
+	</tbody></table></div>
 </div>
 {% endblock %}
