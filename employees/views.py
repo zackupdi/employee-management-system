@@ -167,10 +167,20 @@ def demo_login(request):
         user.first_name = "Demo"
         user.last_name = "Staff"
         user.is_active = True
-        user.is_staff = True
+        user.is_staff = False
         user.is_superuser = False
         user.set_unusable_password()
         user.save()
+
+        Employee.objects.get_or_create(
+            user=user,
+            defaults={
+                "name": "Demo Staff",
+                "department": "Demonstration",
+                "position": "Staff Member",
+                "salary": Decimal("0.00"),
+            },
+        )
 
         auth_login(request, user)
         request.session["demo_mode"] = True
@@ -219,6 +229,8 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
+    if not request.user.is_staff:
+        return redirect('staff_dashboard')
     return render(request, 'employees/dashboard.html')
 
 
@@ -239,9 +251,30 @@ def home(request):
 
 @login_required
 def staff_dashboard(request):
+    if request.user.is_staff:
+        return redirect('dashboard')
+
+    employee = Employee.objects.filter(user=request.user).first()
+    if employee is None:
+        employee = Employee.objects.create(
+            user=request.user,
+            name=request.user.get_full_name() or request.user.username,
+            department='General',
+            position='Employee',
+            salary=Decimal('0.00'),
+        )
+
+    records = Attendance.objects.filter(employee=employee).order_by('-date')
     return render(
         request,
-        'employees/staff_dashboard.html'
+        'employees/staff_dashboard.html',
+        {
+            'employee': employee,
+            'today_record': records.filter(date=timezone.localdate()).first(),
+            'attendance_records': records[:10],
+            'payments': SalaryPayment.objects.filter(employee=employee).order_by('-period')[:6],
+            'schedule': employee.assigned_schedule,
+        },
     )
 
 
