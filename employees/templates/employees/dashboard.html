@@ -19,21 +19,22 @@
   .alert-chip{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;margin-bottom:10px;font-size:13px}
   .alert-chip.warn{background:#f4c95d14;border:1px solid #f4c95d40;color:#f5d67f}
   .alert-chip.ok{background:#16c79a14;border:1px solid #16c79a40;color:#73e3ca}
-  .demo-switch{margin-bottom:20px;padding:18px 20px;border:1px solid #1d4437;border-radius:18px;background:linear-gradient(135deg,#0a1d18,#102b23);box-shadow:0 12px 30px rgba(0,0,0,.18)}
-  .demo-title{text-align:center;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#a8d8c8;margin-bottom:14px}
-  .demo-buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-  .demo-btn{display:inline-flex;align-items:center;justify-content:center;min-width:140px;padding:10px 18px;border-radius:10px;border:1px solid #2d5d50;background:#0d221c;color:#dff9f0;text-decoration:none;font-weight:700;transition:.2s ease}
-  .demo-btn:hover{border-color:#4f8d7a;background:#12342d;text-decoration:none;color:#fff}
+  .account-switch{margin-bottom:20px;padding:18px 20px;border:1px solid #1d4437;border-radius:18px;background:linear-gradient(135deg,#0a1d18,#102b23);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+  .account-switch-title{text-align:center;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#a8d8c8;margin-bottom:14px}
+  .account-switch-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .account-switch-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:10px 14px;border-radius:11px;border:1px solid #2d5d50;background:#0d221c;color:#dff9f0;text-decoration:none;font-weight:800;transition:background .15s ease,border-color .15s ease,transform .15s ease}
+  .account-switch-link:hover{border-color:#4f8d7a;background:#12342d;text-decoration:none;color:#fff;transform:translateY(-1px)}
+  @media(max-width:520px){.account-switch-links{grid-template-columns:1fr}}
 </style>
 {% endblock %}
 
 {% block content %}
 {% if request.session.demo_mode %}
-<div class="demo-switch">
-  <div class="demo-title">Demo Mode</div>
-  <div class="demo-buttons">
-    <a href="{% url 'demo_login' %}?role=admin" class="demo-btn">Admin Dashboard</a>
-    <a href="{% url 'demo_login' %}?role=staff" class="demo-btn">Staff Dashboard</a>
+<div class="account-switch">
+  <div class="account-switch-title">Switch Workspace</div>
+  <div class="account-switch-links">
+    <a href="{% url 'demo_login' %}?role=admin" class="account-switch-link"><i class="fa-solid fa-shield-halved"></i>Admin Dashboard</a>
+    <a href="{% url 'demo_login' %}?role=staff" class="account-switch-link"><i class="fa-solid fa-user"></i>Staff Dashboard</a>
   </div>
 </div>
 {% endif %}

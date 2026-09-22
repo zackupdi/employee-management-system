@@ -3,13 +3,24 @@
 {% block title %}My Dashboard | EMS Pro{% endblock %}
 {% block heading %}My Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    .account-switch { margin-bottom: 20px; padding: 18px 20px; border: 1px solid #1d4437; border-radius: 18px; background: linear-gradient(135deg, #0a1d18, #102b23); box-shadow: 0 12px 30px rgba(0, 0, 0, .18); }
+    .account-switch-title { margin-bottom: 14px; color: #a8d8c8; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-align: center; text-transform: uppercase; }
+    .account-switch-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .account-switch-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 10px 14px; border: 1px solid #2d5d50; border-radius: 11px; background: #0d221c; color: #dff9f0; font-weight: 800; text-decoration: none; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
+    .account-switch-link:hover { border-color: #4f8d7a; background: #12342d; color: #fff; text-decoration: none; transform: translateY(-1px); }
+    @media (max-width: 520px) { .account-switch-links { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
 {% block content %}
 {% if request.session.demo_mode %}
-<div class="demo-switch" style="margin-bottom:20px;padding:12px;border:1px solid rgba(100,200,170,0.15);border-radius:14px;background:rgba(18,45,36,0.8);">
-    <div style="margin-bottom:9px;color:#8fb8aa;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Demo Mode</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="{% url 'demo_login' %}?role=admin" style="flex:1;padding:9px 10px;border-radius:9px;text-align:center;text-decoration:none;font-size:12px;font-weight:700;background:#174c3b;color:#b9eee1;border:1px solid #286d56;">Admin Dashboard</a>
-        <a href="{% url 'demo_login' %}?role=staff" style="flex:1;padding:9px 10px;border-radius:9px;text-align:center;text-decoration:none;font-size:12px;font-weight:700;background:#172822;color:#b0cfc5;border:1px solid #365148;">Staff Dashboard</a>
+<div class="account-switch">
+    <div class="account-switch-title">Switch Workspace</div>
+    <div class="account-switch-links">
+        <a href="{% url 'demo_login' %}?role=admin" class="account-switch-link"><i class="fa-solid fa-shield-halved"></i>Admin Dashboard</a>
+        <a href="{% url 'demo_login' %}?role=staff" class="account-switch-link"><i class="fa-solid fa-user"></i>Staff Dashboard</a>
     </div>
 </div>
 {% endif %}

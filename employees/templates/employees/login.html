@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Demo | EMS Pro</title>
+    <title>EMS Pro | Sign In</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 
     <style>
         * {
@@ -25,7 +26,7 @@
             padding: 20px;
         }
 
-        .demo {
+        .login-panel {
             width: min(430px, 100%);
             background: #0b1c16ef;
             border: 1px solid #1d4437;
@@ -58,7 +59,7 @@
             line-height: 1.5;
         }
 
-        .demo-label {
+        .account-label {
             text-align: center;
             color: #6fe2c9;
             font-size: 12px;
@@ -68,33 +69,56 @@
             margin-bottom: 14px;
         }
 
-        .role {
+        .account-link {
+            position: relative;
             display: block;
             text-decoration: none;
             width: 100%;
-            padding: 15px;
+            min-height: 74px;
+            padding: 15px 18px 15px 58px;
             margin-bottom: 12px;
             border: 1px solid #2b5447;
             border-radius: 12px;
             background: #102a22;
             color: #b9eee1;
             font-weight: 800;
-            text-align: center;
+            text-align: left;
             transition: .2s ease;
         }
 
-        .role:hover {
+        .account-link:hover {
             background: #153b30;
             border-color: #16c79a;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px #0004;
         }
 
-        .role.admin {
+        .account-link.admin {
             background: linear-gradient(135deg, #123f32, #102a22);
         }
 
-        .role.staff {
+        .account-link.staff {
             background: #102a22;
+        }
+
+        .account-icon {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            width: 27px;
+            height: 27px;
+            display: grid;
+            place-items: center;
+            transform: translateY(-50%);
+            color: #062319;
+            background: #27e0b0;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .account-link.staff .account-icon {
+            color: #d9fff5;
+            background: #1c5948;
         }
 
         .role-title {
@@ -132,7 +156,7 @@
 
 <body>
 
-<div class="demo">
+<div class="login-panel">
 
     <div class="logo">
         ⚙
@@ -146,12 +170,12 @@
         Employee Management System
     </div>
 
-    <div class="demo-label">
+    <div class="account-label">
         Choose Account
     </div>
 
-    <!-- DEMO ADMIN -->
-    <a href="{% url 'demo_login' %}?role=admin" class="role admin">
+    <a href="{% url 'demo_login' %}?role=admin" class="account-link admin" aria-label="Open Admin Dashboard">
+        <span class="account-icon"><i class="fa-solid fa-shield-halved"></i></span>
         <span class="role-title">
              Admin
         </span>
@@ -160,8 +184,8 @@
         </span>
     </a>
 
-    <!-- DEMO STAFF -->
-    <a href="{% url 'demo_login' %}?role=staff" class="role staff">
+    <a href="{% url 'demo_login' %}?role=staff" class="account-link staff" aria-label="Open Staff Dashboard">
+        <span class="account-icon"><i class="fa-solid fa-user"></i></span>
         <span class="role-title">
              Staff
         </span>
@@ -171,11 +195,11 @@
     </a>
 
     <div class="notice">
-   enabled. No username or password is required.
+    Fast access is enabled. No username or password is required.
     </div>
 
     <div class="footer">
-        EMS Pro ·  Environment
+        EMS Pro · Secure Environment
     </div>
 
 </div>
