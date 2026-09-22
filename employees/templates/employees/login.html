@@ -4,17 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>EMS Pro | Demo</title>
+    <title>Demo | EMS Pro</title>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -24,307 +16,128 @@
         body {
             margin: 0;
             min-height: 100vh;
-
+            background:
+                radial-gradient(circle at 50% 0, #123f32, #07110e 50%, #040907);
+            color: #eef8f4;
+            font-family: "DM Sans", sans-serif;
             display: grid;
             place-items: center;
-
             padding: 20px;
-
-            background:
-                radial-gradient(
-                    circle at 50% 0%,
-                    #123f32 0%,
-                    #07110e 50%,
-                    #040907 100%
-                );
-
-            color: #eef8f4;
-
-            font-family: "DM Sans", sans-serif;
         }
 
-        .login-panel {
-            width: min(440px, 100%);
-
-            padding: 36px;
-
-            background: rgba(11, 28, 22, .97);
-
+        .demo {
+            width: min(430px, 100%);
+            background: #0b1c16ef;
             border: 1px solid #1d4437;
-
-            border-radius: 22px;
-
-            box-shadow:
-                0 25px 80px rgba(0, 0, 0, .55);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 25px 80px #0008;
         }
 
         .logo {
-            width: 64px;
-            height: 64px;
-
-            margin: 0 auto 20px;
-
+            width: 62px;
+            height: 62px;
+            border-radius: 17px;
             display: grid;
             place-items: center;
-
-            border-radius: 18px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #16c79a,
-                    #27e0b0
-                );
-
+            background: linear-gradient(135deg, #16c79a, #27e0b0);
             color: #032017;
-
             font-size: 25px;
-
-            box-shadow:
-                0 12px 35px rgba(22, 199, 154, .18);
+            margin: 0 auto 20px;
         }
 
         .title {
             text-align: center;
-
-            font:
-                800 28px
-                Manrope,
-                sans-serif;
+            font: 800 28px Manrope, sans-serif;
         }
 
         .sub {
-            margin: 8px 0 28px;
-
             text-align: center;
-
             color: #8fa9a0;
-
+            margin: 8px 0 30px;
             line-height: 1.5;
-
-            font-size: 14px;
         }
 
-        .account-label {
-            margin-bottom: 14px;
-
+        .demo-label {
             text-align: center;
-
             color: #6fe2c9;
-
-            font-size: 11px;
-
+            font-size: 12px;
             font-weight: 800;
-
             text-transform: uppercase;
-
-            letter-spacing: 1.6px;
+            letter-spacing: 1.5px;
+            margin-bottom: 14px;
         }
 
-        /*
-        ============================
-        DEMO BUTTON
-        ============================
-        */
-
-        .demo-button {
-            position: relative;
-
+        .role {
             display: block;
-
-            width: 100%;
-
-            min-height: 78px;
-
-            margin-bottom: 12px;
-
-            padding: 16px 45px 16px 62px;
-
             text-decoration: none;
-
-            text-align: left;
-
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
             border: 1px solid #2b5447;
-
-            border-radius: 14px;
-
+            border-radius: 12px;
             background: #102a22;
-
             color: #b9eee1;
-
-            cursor: pointer;
-
-            transition:
-                transform .2s ease,
-                background .2s ease,
-                border-color .2s ease,
-                box-shadow .2s ease;
-        }
-
-        .demo-button:hover {
-            transform: translateY(-2px);
-
-            border-color: #16c79a;
-
-            background: #153b30;
-
-            box-shadow:
-                0 12px 30px rgba(0, 0, 0, .25);
-        }
-
-        .demo-button:active {
-            transform: translateY(0);
-        }
-
-        .demo-button.admin {
-            background:
-                linear-gradient(
-                    135deg,
-                    #123f32,
-                    #102a22
-                );
-        }
-
-        .demo-button.staff {
-            background:
-                linear-gradient(
-                    135deg,
-                    #102a22,
-                    #0d211b
-                );
-        }
-
-        .account-icon {
-            position: absolute;
-
-            top: 50%;
-            left: 18px;
-
-            width: 30px;
-            height: 30px;
-
-            display: grid;
-            place-items: center;
-
-            transform: translateY(-50%);
-
-            border-radius: 9px;
-
-            background: #27e0b0;
-
-            color: #062319;
-
-            font-size: 13px;
-        }
-
-        .staff .account-icon {
-            background: #1c5948;
-            color: #d9fff5;
-        }
-
-        .arrow {
-            position: absolute;
-
-            right: 18px;
-            top: 50%;
-
-            transform: translateY(-50%);
-
-            color: #5e8b7d;
-
-            font-size: 13px;
-
+            font-weight: 800;
+            text-align: center;
             transition: .2s ease;
         }
 
-        .demo-button:hover .arrow {
-            color: #27e0b0;
-            transform:
-                translate(3px, -50%);
+        .role:hover {
+            background: #153b30;
+            border-color: #16c79a;
+            transform: translateY(-1px);
         }
 
-        .demo-button strong {
+        .role.admin {
+            background: linear-gradient(135deg, #123f32, #102a22);
+        }
+
+        .role.staff {
+            background: #102a22;
+        }
+
+        .role-title {
             display: block;
-
-            margin-bottom: 4px;
-
-            color: #ffffff;
-
             font-size: 16px;
-
-            font-weight: 800;
+            margin-bottom: 3px;
         }
 
-        .demo-button span {
+        .role-description {
             display: block;
-
-            color: #75988e;
-
             font-size: 12px;
-
+            color: #75988e;
             font-weight: 600;
         }
 
         .notice {
             margin-top: 20px;
-
-            padding: 12px;
-
-            border:
-                1px solid
-                rgba(22, 199, 154, .20);
-
+            padding: 11px;
+            border: 1px solid #16c79a33;
+            background: #16c79a0d;
             border-radius: 10px;
-
-            background:
-                rgba(22, 199, 154, .05);
-
             color: #8fa9a0;
-
             text-align: center;
-
             font-size: 12px;
         }
 
-        .notice i {
-            margin-right: 5px;
-
-            color: #27e0b0;
-        }
-
         .footer {
-            margin-top: 22px;
-
-            color: #58766d;
-
             text-align: center;
-
-            font-size: 11px;
-        }
-
-        @media (max-width: 480px) {
-
-            .login-panel {
-                padding: 28px 20px;
-            }
-
-            .title {
-                font-size: 25px;
-            }
+            color: #58766d;
+            font-size: 12px;
+            margin-top: 22px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="login-panel">
+<div class="demo">
 
-    <!-- LOGO -->
     <div class="logo">
-        <i class="fa-solid fa-users-gear"></i>
+        ⚙
     </div>
 
-    <!-- TITLE -->
     <div class="title">
         Welcome to EMS
     </div>
@@ -333,81 +146,33 @@
         Employee Management System
     </div>
 
-    <!-- ACCOUNT -->
-    <div class="account-label">
-        Choose Account
+    <div class="demo-label">
+        Choose Demo Account
     </div>
 
-
-    <!-- =========================
-         ADMIN
-    ========================== -->
-
-    <a
-        href="{% url 'demo_login' %}?role=admin"
-        class="demo-button admin"
-    >
-
-        <div class="account-icon">
-            <i class="fa-solid fa-shield-halved"></i>
-        </div>
-
-        <strong>
+    <!-- DEMO ADMIN -->
+    <a href="{% url 'demo_login' %}?role=admin" class="role admin">
+        <span class="role-title">
             Demo Admin
-        </strong>
-
-        <span>
+        </span>
+        <span class="role-description">
             View the complete admin dashboard
         </span>
-
-        <div class="arrow">
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-
     </a>
 
-
-    <!-- =========================
-         STAFF
-    ========================== -->
-
-    <a
-        href="{% url 'demo_login' %}?role=staff"
-        class="demo-button staff"
-    >
-
-        <div class="account-icon">
-            <i class="fa-solid fa-user"></i>
-        </div>
-
-        <strong>
+    <!-- DEMO STAFF -->
+    <a href="{% url 'demo_login' %}?role=staff" class="role staff">
+        <span class="role-title">
             Demo Staff
-        </strong>
-
-        <span>
+        </span>
+        <span class="role-description">
             View the employee/staff dashboard
         </span>
-
-        <div class="arrow">
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-
     </a>
 
-
-    <!-- NOTICE -->
-
     <div class="notice">
-
-        <i class="fa-solid fa-circle-check"></i>
-
-        Fast access is enabled.
-        No username or password is required.
-
+        Demo mode is enabled. No username or password is required.
     </div>
-
-
-    <!-- FOOTER -->
 
     <div class="footer">
         EMS Pro · Demo Environment

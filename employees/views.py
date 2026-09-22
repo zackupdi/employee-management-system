@@ -98,7 +98,7 @@ def signup_view(request):
 
 
 def demo_mode_enabled():
-    return os.environ.get('DEMO_MODE', '').lower() == 'true'
+    return getattr(settings, 'DEMO_MODE', False)
 
 
 def _demo_user(role):

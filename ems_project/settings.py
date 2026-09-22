@@ -9,7 +9,7 @@ SECRET_KEY = 'django-insecure-1c8o5+_*z2dh3+bc$t3)ep&)ur1k0z^p(zjq$2tm)msr=7$ljw
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEMO_MODE = os.environ.get('DEMO_MODE', '').lower() in {'1', 'true', 'yes'}
+DEMO_MODE = os.environ.get('DEMO_MODE', 'true').lower() in {'1', 'true', 'yes'}
 
 ALLOWED_HOSTS = [
     'employee-management-system-2-pv2q.onrender.com',
