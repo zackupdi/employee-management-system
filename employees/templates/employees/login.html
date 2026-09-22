@@ -69,7 +69,7 @@
             margin-bottom: 14px;
         }
 
-        .account-link {
+        .demo-button {
             position: relative;
             display: block;
             text-decoration: none;
@@ -86,18 +86,18 @@
             transition: .2s ease;
         }
 
-        .account-link:hover {
+        .demo-button:hover {
             background: #153b30;
             border-color: #16c79a;
             transform: translateY(-2px);
             box-shadow: 0 10px 24px #0004;
         }
 
-        .account-link.admin {
+        .demo-button.admin {
             background: linear-gradient(135deg, #123f32, #102a22);
         }
 
-        .account-link.staff {
+        .demo-button.staff {
             background: #102a22;
         }
 
@@ -116,9 +116,22 @@
             font-size: 13px;
         }
 
-        .account-link.staff .account-icon {
+        .demo-button.staff .account-icon {
             color: #d9fff5;
             background: #1c5948;
+        }
+
+        .demo-button strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 16px;
+        }
+
+        .demo-button span {
+            display: block;
+            color: #75988e;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .role-title {
@@ -174,24 +187,14 @@
         Choose Account
     </div>
 
-    <a href="{% url 'demo_login' %}?role=admin" class="account-link admin" aria-label="Open Admin Dashboard">
-        <span class="account-icon"><i class="fa-solid fa-shield-halved"></i></span>
-        <span class="role-title">
-             Admin
-        </span>
-        <span class="role-description">
-            View the complete admin dashboard
-        </span>
+    <a href="{% url 'demo_login' %}?role=admin" class="demo-button">
+        <strong>Admin</strong>
+        <span>View the complete admin dashboard</span>
     </a>
 
-    <a href="{% url 'demo_login' %}?role=staff" class="account-link staff" aria-label="Open Staff Dashboard">
-        <span class="account-icon"><i class="fa-solid fa-user"></i></span>
-        <span class="role-title">
-             Staff
-        </span>
-        <span class="role-description">
-            View the employee/staff dashboard
-        </span>
+    <a href="{% url 'demo_login' %}?role=staff" class="demo-button">
+        <strong>Staff</strong>
+        <span>View the employee/staff dashboard</span>
     </a>
 
     <div class="notice">

@@ -153,37 +153,11 @@ def login_view(request):
 
 
 def demo_login(request):
-    """
-    Direct demo login.
-
-    /demo/?role=admin
-    /demo/?role=staff
-    """
-
     if not demo_mode_enabled():
-        return redirect("login")
+        return redirect("/employees/login/")
 
     User = get_user_model()
-    role = request.GET.get("role", "admin").strip().lower()
-
-    if role == "admin":
-        user, created = User.objects.get_or_create(
-            username="demo_admin"
-        )
-
-        user.first_name = "Demo"
-        user.last_name = "Admin"
-        user.is_active = True
-        user.is_staff = True
-        user.is_superuser = True
-        user.set_unusable_password()
-        user.save()
-
-        auth_login(request, user)
-        request.session["demo_mode"] = True
-        request.session["demo_role"] = "admin"
-        request.session.modified = True
-        return redirect("/employees/dashboard/")
+    role = request.GET.get("role", "").strip().lower()
 
     if role == "staff":
         user, created = User.objects.get_or_create(
@@ -204,7 +178,26 @@ def demo_login(request):
         request.session.modified = True
         return redirect("/employees/staff/dashboard/")
 
-    return redirect("/employees/demo/?role=admin")
+    if role == "admin":
+        user, created = User.objects.get_or_create(
+            username="demo_admin"
+        )
+
+        user.first_name = "Demo"
+        user.last_name = "Admin"
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.set_unusable_password()
+        user.save()
+
+        auth_login(request, user)
+        request.session["demo_mode"] = True
+        request.session["demo_role"] = "admin"
+        request.session.modified = True
+        return redirect("/employees/dashboard/")
+
+    return redirect("/employees/demo/")
 
 
 def demo_logout(request):
